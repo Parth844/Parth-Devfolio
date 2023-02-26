@@ -4,3 +4,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-02-08 14:00:00
 - docs: initial brainstorming for portfolio
+
+## 2023-02-26 14:00:00
+- feat: basic directory structure
