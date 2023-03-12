@@ -7,3 +7,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-02-26 14:00:00
 - feat: basic directory structure
+
+## 2023-03-12 14:00:00
+- research: comparing three.js vs r3f
