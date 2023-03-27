@@ -10,3 +10,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-03-12 14:00:00
 - research: comparing three.js vs r3f
+
+## 2023-03-27 14:00:00
+- docs: early design principles
