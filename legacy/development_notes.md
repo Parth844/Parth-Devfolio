@@ -13,3 +13,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-03-27 14:00:00
 - docs: early design principles
+
+## 2023-04-16 14:00:00
+- feat: test asset loading
