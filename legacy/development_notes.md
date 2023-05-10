@@ -16,3 +16,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-04-16 14:00:00
 - feat: test asset loading
+
+## 2023-05-10 14:00:00
+- chore: initial package dependencies research
