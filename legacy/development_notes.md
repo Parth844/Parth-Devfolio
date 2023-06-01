@@ -19,3 +19,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-05-10 14:00:00
 - chore: initial package dependencies research
+
+## 2023-06-01 14:00:00
+- docs: refining project scope
