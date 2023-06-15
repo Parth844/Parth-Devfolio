@@ -22,3 +22,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-06-01 14:00:00
 - docs: refining project scope
+
+## 2023-06-15 14:00:00
+- feat: experiment with particle systems
