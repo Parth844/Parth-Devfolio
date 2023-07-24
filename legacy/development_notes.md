@@ -28,3 +28,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-07-07 14:00:00
 - docs: architecture notes
+
+## 2023-07-24 14:00:00
+- chore: early gitignore setup
