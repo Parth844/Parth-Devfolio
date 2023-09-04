@@ -34,3 +34,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-08-10 14:00:00
 - docs: drafting about me section
+
+## 2023-09-04 14:00:00
+- feat: testing responsive layouts prototypes
