@@ -40,3 +40,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-09-28 14:00:00
 - docs: galaxy theme inspiration notes
+
+## 2023-10-15 14:00:00
+- chore: cleanup of early experiments
