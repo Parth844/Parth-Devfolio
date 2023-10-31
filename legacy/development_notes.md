@@ -43,3 +43,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-10-15 14:00:00
 - chore: cleanup of early experiments
+
+## 2023-10-31 14:00:00
+- docs: project roadmap v1
