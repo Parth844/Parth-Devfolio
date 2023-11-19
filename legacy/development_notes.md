@@ -46,3 +46,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-10-31 14:00:00
 - docs: project roadmap v1
+
+## 2023-11-19 14:00:00
+- feat: basic lighting tests in threejs
