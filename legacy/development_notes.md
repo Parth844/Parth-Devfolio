@@ -49,3 +49,6 @@ This file tracks the initial brainstorming and legacy notes from the project's i
 
 ## 2023-11-19 14:00:00
 - feat: basic lighting tests in threejs
+
+## 2023-12-11 14:00:00
+- docs: assets list for 3D models
