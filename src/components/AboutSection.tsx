@@ -1,127 +1,130 @@
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Sparkles, Brain, Palette, Code } from "lucide-react";
+import { Canvas } from "@react-three/fiber";
+import InteractiveModel from "./ui/InteractiveModel";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const timeline = [
-  { year: "2021", title: "Started Coding Journey", desc: "Dived into Python, Java, and C++ fundamentals" },
-  { year: "2022", title: "UI/UX Design Discovery", desc: "Fell in love with Figma and design thinking" },
-  { year: "2023", title: "AI & ML Exploration", desc: "Built first AI projects and explored machine learning" },
-  { year: "2024", title: "Web3 & Innovation", desc: "Blockchain concepts, hackathons, and pushing boundaries" },
+  { year: "2023", title: "B.Tech Computer Science", desc: "Started degree at ABES Institute of Technology." },
+  { year: "2024", title: "Independent Developer", desc: "Architected full-stack AR applications and trained high-performance face recognition pipelines." },
+  { year: "2025", title: "Hackathon Winner", desc: "Secured 1st in Build With Gemini and 3rd at Delhi University for AR/VR innovation." },
+  { year: "Present", title: "AI/ML Innovator", desc: "Building scalable AI solutions and mentoring developers." },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.6, delay: 0.15 + i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
-
 const AboutSection = () => {
-  const ref = useRef(null);
-  const sectionRef = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+  const inViewRef = useRef(null);
+  const inView = useInView(inViewRef, { once: true, margin: "-100px" });
 
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ["60px", "-60px"]);
-  const orbParallax = useTransform(scrollYProgress, [0, 1], ["80px", "-80px"]);
+  useGSAP(() => {
+    // Only apply pinning on larger screens to avoid mobile jank
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        pin: leftColRef.current,
+        pinSpacing: false,
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: containerRef });
 
   return (
-    <section id="about" className="section-padding relative overflow-hidden" ref={sectionRef}>
-      {/* Parallax background orb */}
-      <motion.div
-        style={{ y: orbParallax }}
-        className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none"
-      />
+    <section id="about" className="border-b border-border bg-background relative" ref={containerRef}>
+      <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-2 relative">
 
-      <div className="max-w-6xl mx-auto relative" ref={ref}>
-        <motion.div
-          style={{ y: parallaxY }}
-          initial={{ opacity: 0, y: 60, filter: "blur(8px)" }}
-          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="mb-16"
+        {/* Left Column - Pinned */}
+        <div
+          ref={leftColRef}
+          className="md:col-span-1 p-8 md:p-16 border-b md:border-b-0 md:border-r border-border h-fit md:h-screen flex flex-col justify-center relative overflow-hidden"
         >
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">About Me</p>
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
-            A Tech Enthusiast with a<br />
-            <span className="gradient-text">Creative Edge</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
-            I'm Parth Tyagi — a passionate builder at the intersection of design and technology.
-            I thrive on creating experiences that merge AI, Machine Learning, Web3 innovation,
-            and pixel-perfect design into products that matter.
-          </p>
-        </motion.div>
+          {/* Subtle 3D background integrated into the pinned section */}
+          <div className="absolute inset-0 opacity-30 pointer-events-none z-0">
+            <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+              <InteractiveModel color="hsl(151, 55%, 52%)" distort={0.4} speed={1} />
+            </Canvas>
+          </div>
 
-        <div className="grid md:grid-cols-4 gap-6 mb-16">
-          {[
-            { icon: Palette, label: "Design", desc: "Pixel-perfect interfaces" },
-            { icon: Code, label: "Code", desc: "Clean, scalable solutions" },
-            { icon: Brain, label: "AI/ML", desc: "Intelligent systems" },
-            { icon: Sparkles, label: "Innovation", desc: "Pushing boundaries" },
-          ].map((item, i) => (
+          <div className="relative z-10" ref={inViewRef}>
             <motion.div
-              key={item.label}
-              custom={i}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              variants={cardVariants}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="glass rounded-xl p-6 text-center group hover:border-primary/30 transition-all duration-300 hover:neon-glow"
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <item.icon className="mx-auto mb-3 text-primary group-hover:scale-110 transition-transform duration-300" size={28} />
-              <h3 className="font-display font-semibold mb-1">{item.label}</h3>
-              <p className="text-sm text-muted-foreground">{item.desc}</p>
+              <p className="text-primary font-medium tracking-widest uppercase text-xs mb-4">About Me</p>
+              <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter mb-8 text-foreground">
+                Creative<br />
+                <span className="text-primary">Engineering</span>
+              </h2>
+              <p className="text-muted-foreground text-lg leading-relaxed max-w-md font-sans font-light">
+                I'm Parth Tyagi — an AI/ML developer who treats code like a design medium.
+                I focus on building resilient, gorgeous interfaces powered by Deep Learning, spatial computing, and an obsessive attention to detail.
+              </p>
             </motion.div>
-          ))}
+          </div>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          <motion.div
-            className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border origin-top"
-            initial={{ scaleY: 0 }}
-            animate={inView ? { scaleY: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-          />
-          {timeline.map((item, i) => (
-            <motion.div
-              key={item.year}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50, filter: "blur(4px)" }}
-              animate={inView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
-              transition={{ duration: 0.7, delay: 0.5 + i * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className={`relative flex items-start mb-8 ${
-                i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              } flex-row`}
-            >
-              <div className={`hidden md:block md:w-1/2 ${i % 2 === 0 ? "md:text-right md:pr-12" : "md:text-left md:pl-12"}`}>
-                <div className="glass rounded-xl p-5 inline-block hover:border-primary/20 transition-all duration-500">
-                  <span className="text-primary font-display font-bold text-lg">{item.year}</span>
-                  <h4 className="font-display font-semibold mt-1">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
-                </div>
-              </div>
-              <motion.div
-                className="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-primary -translate-x-1/2 mt-2 neon-glow"
-                initial={{ scale: 0 }}
-                animate={inView ? { scale: 1 } : {}}
-                transition={{ duration: 0.4, delay: 0.6 + i * 0.2, type: "spring", stiffness: 300 }}
-              />
-              <div className="md:hidden pl-10">
-                <span className="text-primary font-display font-bold">{item.year}</span>
-                <h4 className="font-display font-semibold">{item.title}</h4>
+        {/* Right Column - Scrolling Content */}
+        <div ref={rightColRef} className="md:col-span-1 flex flex-col">
+
+          {/* Skills Grid - Bento Sub-grid */}
+          <div className="grid grid-cols-2 border-b border-border">
+            {[
+              { icon: Code, label: "Core Logic", desc: "Python, C++, JS" },
+              { icon: Brain, label: "AI/CV", desc: "OpenCV, Deep Learning" },
+              { icon: Sparkles, label: "AR & 3D", desc: "Unity, Blender, ARKit" },
+              { icon: Palette, label: "UI/UX", desc: "Figma, Prototyping" },
+            ].map((item, i) => (
+              <div
+                key={item.label}
+                className={`p-8 md:p-12 border-border hover:bg-card transition-colors duration-500 flex flex-col justify-center
+                  ${i % 2 === 0 ? "border-r" : ""} 
+                  ${i < 2 ? "border-b" : ""}
+                `}
+                style={{ minHeight: "250px" }}
+              >
+                <item.icon className="mb-6 text-primary" size={32} strokeWidth={1.5} />
+                <h3 className="font-display font-bold text-xl mb-2 text-foreground">{item.label}</h3>
                 <p className="text-sm text-muted-foreground">{item.desc}</p>
               </div>
-              <div className="hidden md:block md:w-1/2" />
-            </motion.div>
-          ))}
+            ))}
+          </div>
+
+          {/* Timeline Section */}
+          <div className="p-8 md:p-16 flex-grow flex flex-col justify-center min-h-screen">
+            <h3 className="font-display text-2xl font-bold uppercase mb-12 tracking-wider">The Journey</h3>
+
+            <div className="space-y-12">
+              {timeline.map((item, i) => (
+                <motion.div
+                  key={item.year}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.6, delay: 0.1 * i }}
+                  className="relative pl-8 border-l border-border hover:border-primary transition-colors duration-300"
+                >
+                  <div className="absolute left-[-5px] top-0 w-2 h-2 rounded-full bg-border" />
+                  <span className="text-primary font-display font-bold text-lg leading-none block mb-2">{item.year}</span>
+                  <h4 className="font-display font-semibold text-xl mb-2 text-foreground">{item.title}</h4>
+                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

@@ -6,49 +6,57 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 210 40% 96%;
+    /* Shopify Editions inspired Stark Black & White with vibrant accents */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    --card: 220 20% 8%;
-    --card-foreground: 210 40% 96%;
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 220 20% 8%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 220 20% 4%;
+    --primary: 151 55% 52%;
+    /* Shopify Green */
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 220 20% 12%;
-    --secondary-foreground: 210 40% 96%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 15% 15%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 265 80% 60%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 217 91% 60%;
+    /* Vibrant Blue accent */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 16%;
-    --input: 220 15% 16%;
-    --ring: 199 89% 48%;
+    /* Bento Box Grid Lines */
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 151 55% 52%;
 
-    --radius: 0.75rem;
+    --radius: 0rem;
+    /* Shopify Editions uses sharp or very slightly rounded edges */
 
-    --neon-glow: 199 89% 48%;
-    --neon-purple: 265 80% 60%;
-    --glass: 220 20% 10%;
-    --glass-border: 220 15% 20%;
+    /* Custom utility colors */
+    --neon-glow: 151 55% 52%;
+    --neon-purple: 217 91% 60%;
 
-    --sidebar-background: 220 20% 6%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 220 20% 4%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 220 15% 16%;
-    --sidebar-ring: 199 89% 48%;
+    /* Strict glass effects for bento boxes */
+    --glass: 0 0% 4%;
+    --glass-border: 0 0% 20%;
+
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 151 55% 52%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 151 55% 52%;
   }
 }
 
@@ -58,22 +66,44 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans tracking-tight;
     font-family: 'Inter', sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* Hide default cursor on devices with a mouse, since we use CustomCursor */
+  @media (pointer: fine) {
+
+    body,
+    a,
+    button,
+    input,
+    select,
+    textarea {
+      cursor: none !important;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Space Grotesk', sans-serif;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-card/40 backdrop-blur-xl border border-glass-border;
+    @apply bg-card/80 backdrop-blur-md;
+  }
+
+  .bento-border {
+    @apply border border-glass-border shadow-[0_0_15px_rgba(255, 255, 255, 0.02)];
   }
 
   .glass-strong {
-    @apply bg-card/60 backdrop-blur-2xl border border-glass-border;
+    @apply bg-card/95 backdrop-blur-3xl border border-glass-border;
   }
 
   .neon-text {
@@ -121,4 +151,29 @@
 ::selection {
   background: hsl(var(--primary) / 0.3);
   color: hsl(var(--foreground));
+}
+
+html.lenis {
+  height: auto;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }

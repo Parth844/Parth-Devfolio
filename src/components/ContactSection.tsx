@@ -119,14 +119,16 @@ const ContactSection = () => {
           className="flex justify-center gap-6 mt-10"
         >
           {[
-            { icon: Github, href: "#", label: "GitHub" },
-            { icon: Linkedin, href: "#", label: "LinkedIn" },
-            { icon: Mail, href: "mailto:parth@example.com", label: "Email" },
+            { icon: Github, href: "https://github.com/Parth844", label: "GitHub" },
+            { icon: Linkedin, href: "https://linkedin.com/in/parthtyagi-design", label: "LinkedIn" },
+            { icon: Mail, href: "mailto:Parthtyagi520@gmail.com", label: "Email" },
           ].map((social, i) => (
             <motion.a
               key={social.label}
               href={social.href}
               aria-label={social.label}
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ y: -4, scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 20 }}

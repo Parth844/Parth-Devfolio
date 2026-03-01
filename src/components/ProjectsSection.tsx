@@ -1,100 +1,174 @@
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { title: "GeoState", desc: "A blockchain-powered platform revolutionizing land record management with transparent, immutable transactions.", tech: ["Blockchain", "Solidity", "React", "Node.js"], gradient: "from-primary/20 to-accent/20" },
-  { title: "AI Smart Dustbin", desc: "An intelligent waste management system using computer vision to automatically sort and classify waste in real-time.", tech: ["Python", "TensorFlow", "OpenCV", "IoT"], gradient: "from-accent/20 to-primary/20" },
-  { title: "PromptMesh", desc: "An AI-driven concept that generates 3D models from natural language prompts, bridging text and spatial design.", tech: ["AI/ML", "Three.js", "Python", "WebGL"], gradient: "from-primary/20 to-primary/10" },
-  { title: "Healthy Recipe AI", desc: "A smart web application that recommends personalized healthy recipes based on dietary preferences and available ingredients.", tech: ["React", "Python", "NLP", "API"], gradient: "from-accent/20 to-accent/10" },
+  { title: "Lost-Buddy", desc: "Pioneering AI-driven search tool utilizing Deep Learning facial embeddings to achieve 98% identification accuracy for missing person cases.", tech: ["Python", "FastAPI", "Deep Learning"], gradient: "from-primary/20 to-accent/20", colSpan: "md:col-span-2", rowSpan: "md:row-span-2", link: "https://github.com/Parth844/Sih-chatbot-main" },
+  { title: "ARKITECH", desc: "Unity-based Augmented Reality (AR) tour platform for immersive 3D architectural visualization.", tech: ["Unity", "C#", "AR"], gradient: "from-accent/20 to-primary/20", colSpan: "md:col-span-1", rowSpan: "md:row-span-1", link: "https://github.com/Parth844/ARkitechs" },
+  { title: "LaneGuard AI", desc: "Intelligent Traffic Lane Enforcement System with automated violation tracking.", tech: ["Computer Vision", "Python"], gradient: "from-primary/20 to-primary/10", colSpan: "md:col-span-1", rowSpan: "md:row-span-1", link: "https://github.com/Parth844/LaneGuard-AI-Intelligent-Traffic-Lane-Enforcement-System" },
+  { title: "FaceID-Pro", desc: "Professional, real-time facial recognition web application.", tech: ["Flask", "dlib", "Python"], gradient: "from-accent/20 to-accent/10", colSpan: "md:col-span-2", rowSpan: "md:row-span-1", link: "https://github.com/Parth844/FaceID-Pro-Advanced-Facial-Recognition-System" },
 ];
 
-const ProjectCard = ({ project, i, inView }: { project: typeof projects[0]; i: number; inView: boolean }) => {
+const ProjectCard = ({ project, i }: { project: typeof projects[0]; i: number }) => {
   const [hovered, setHovered] = useState(false);
+  const cardRef = useRef(null);
+  const inView = useInView(cardRef, { once: true, margin: "-50px" });
+
+  // 3D Tilt Effect Setup (subtler for bento)
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    x.set(0);
+    y.set(0);
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 60, rotateY: i % 2 === 0 ? -5 : 5 }}
-      animate={inView ? { opacity: 1, y: 0, rotateY: 0 } : {}}
-      transition={{ duration: 0.7, delay: 0.15 * i, ease: [0.25, 0.46, 0.45, 0.94] }}
-      whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.35, ease: "easeOut" } }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      className="glass rounded-2xl overflow-hidden group hover:border-primary/30 transition-all duration-500 hover:neon-glow"
-      style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+    <motion.a
+      ref={cardRef}
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: 0.1 * i, ease: "easeOut" }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className={`relative group bg-card border-b md:border-b-0 md:border-r border-border overflow-hidden block ${project.colSpan} ${project.rowSpan} last:border-r-0`}
     >
-      <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
+      {/* Background Graphic Area */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-500`}
+        style={{ transform: "translateZ(10px)" }}
+      >
         <motion.div
-          animate={{ scale: hovered ? 1.15 : 1, rotate: hovered ? 2 : 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="absolute inset-0 flex items-center justify-center"
-        >
-          <span className="font-display text-4xl font-bold text-foreground/10 group-hover:text-foreground/20 transition-colors duration-500">
-            {project.title}
-          </span>
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-60" />
-        {/* Animated shine on hover */}
-        <motion.div
+          animate={{ x: hovered ? "100%" : "-100%" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent -skew-x-12"
-          initial={{ x: "-150%" }}
-          animate={{ x: hovered ? "150%" : "-150%" }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
         />
       </div>
 
-      <div className="p-6">
-        <h3 className="font-display text-xl font-bold mb-2 group-hover:text-primary transition-colors duration-300">
-          {project.title}
-        </h3>
-        <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{project.desc}</p>
-        <div className="flex flex-wrap gap-2 mb-4">
+      <div className="relative z-10 p-8 md:p-12 h-full flex flex-col" style={{ transform: "translateZ(30px)" }}>
+        <div className="flex justify-between items-start mb-6">
+          <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+            {project.title}
+          </h3>
+          <motion.div
+            animate={{ rotate: hovered ? 45 : 0 }}
+            className="w-10 h-10 rounded-full border border-border flex items-center justify-center bg-background/50 text-muted-foreground group-hover:text-primary group-hover:border-primary transition-colors"
+          >
+            <ArrowUpRight size={20} />
+          </motion.div>
+        </div>
+
+        <p className="text-muted-foreground text-sm md:text-base mb-8 max-w-md flex-grow">{project.desc}</p>
+
+        <div className="flex flex-wrap gap-2 mt-auto">
           {project.tech.map((t) => (
-            <span key={t} className="text-xs px-2 py-1 rounded bg-secondary text-primary border border-border">{t}</span>
+            <span key={t} className="text-xs px-3 py-1 bg-secondary text-secondary-foreground uppercase tracking-wider font-semibold border border-transparent group-hover:border-border transition-colors">
+              {t}
+            </span>
           ))}
         </div>
-        <button className="text-sm text-primary font-medium flex items-center gap-2 group/btn hover:gap-3 transition-all duration-300">
-          View Case Study <ExternalLink size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-        </button>
       </div>
-    </motion.div>
+    </motion.a>
   );
 };
 
 const ProjectsSection = () => {
-  const ref = useRef(null);
-  const sectionRef = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ["50px", "-50px"]);
+  const inViewRef = useRef(null);
+  const inView = useInView(inViewRef, { once: true, margin: "-100px" });
+
+  useGSAP(() => {
+    // Only apply pinning on larger screens to avoid mobile jank
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        pin: leftColRef.current,
+        pinSpacing: false,
+      });
+    });
+
+    return () => mm.revert();
+  }, { scope: containerRef });
 
   return (
-    <section id="projects" className="section-padding relative overflow-hidden" ref={sectionRef}>
-      <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], ["100px", "-100px"]) }}
-        className="absolute right-0 top-1/4 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none"
-      />
+    <section id="projects" className="border-b border-border bg-background relative" ref={containerRef}>
+      <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-12 relative">
 
-      <div className="max-w-6xl mx-auto relative" ref={ref}>
-        <motion.div
-          style={{ y: parallaxY }}
-          initial={{ opacity: 0, y: 50, filter: "blur(8px)" }}
-          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="mb-16"
+        {/* Left Column - Pinned Title */}
+        <div
+          ref={leftColRef}
+          className="md:col-span-4 p-6 lg:p-10 border-b md:border-b-0 md:border-r border-border h-fit md:h-screen flex flex-col justify-center bg-glass backdrop-blur-md relative z-10"
         >
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Projects</p>
-          <h2 className="font-display text-3xl md:text-5xl font-bold">
-            Featured <span className="gradient-text">Work</span>
-          </h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.title} project={project} i={i} inView={inView} />
-          ))}
+          <div ref={inViewRef}>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <p className="text-primary font-medium tracking-widest uppercase text-xs mb-4">
+                Selected Work
+              </p>
+              <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
+                Built<br />
+                For<br />
+                <span className="text-primary">Scale</span>
+              </h2>
+            </motion.div>
+          </div>
         </div>
+
+        {/* Right Column - Scrolling Content Grid */}
+        <div ref={rightColRef} className="md:col-span-8 flex flex-col">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            {projects.map((project, i) => (
+              <ProjectCard key={project.title} project={project} i={i} />
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );
