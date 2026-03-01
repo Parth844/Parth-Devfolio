@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 import { ArrowDown, Send } from "lucide-react";
 
 const roles = ["UI/UX Designer", "AI Explorer", "Tech Innovator", "Web3 Enthusiast"];
@@ -8,6 +8,18 @@ const HeroSection = () => {
   const [roleIndex, setRoleIndex] = useState(0);
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const ref = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const orbY1 = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  const orbY2 = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   useEffect(() => {
     const current = roles[roleIndex];
@@ -32,16 +44,16 @@ const HeroSection = () => {
   }, [text, isDeleting, roleIndex]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center section-padding overflow-hidden">
-      {/* Gradient orbs */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-primary/10 blur-[120px] animate-pulse-glow" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-[120px] animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center section-padding overflow-hidden">
+      {/* Parallax gradient orbs */}
+      <motion.div style={{ y: orbY1 }} className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-primary/10 blur-[120px] animate-pulse-glow" />
+      <motion.div style={{ y: orbY2 }} className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-accent/10 blur-[120px] animate-pulse-glow" />
 
-      <div className="relative z-10 text-center max-w-4xl mx-auto">
+      <motion.div style={{ y, opacity, scale }} className="relative z-10 text-center max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 60, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <p className="text-primary font-medium tracking-widest uppercase text-sm mb-6">
             Welcome to my universe
@@ -54,9 +66,9 @@ const HeroSection = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <p className="text-xl md:text-2xl text-muted-foreground mb-2 h-8 font-display">
             {text}
@@ -65,9 +77,9 @@ const HeroSection = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="flex flex-col sm:flex-row gap-4 justify-center mt-10"
         >
           <button
@@ -92,7 +104,7 @@ const HeroSection = () => {
         >
           <ArrowDown className="text-muted-foreground animate-bounce" size={20} />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 };
