@@ -8,9 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const achievements = [
-  { icon: Trophy, title: "Hackathon Participant", desc: "Competed in multiple hackathons, building innovative solutions under pressure and collaborating with diverse teams.", colSpan: "md:col-span-2" },
-  { icon: Users, title: "PixelEdge Workshops", desc: "Led and participated in design workshops, sharing knowledge about UI/UX principles and creative design thinking.", colSpan: "md:col-span-1" },
-  { icon: Target, title: "DSA Milestones", desc: "Consistently building problem-solving skills through competitive programming and data structure challenges.", colSpan: "md:col-span-1" },
+  { icon: Trophy, title: "Gemini Hackathon Winner", desc: "Secured first position by developing an innovative AI solution. Designed and presented a functional prototype under strict time constraints.", colSpan: "md:col-span-2" },
+  { icon: Target, title: "Delhi U. Hackathon 3rd", desc: "Secured third position for ARKITECH, an immersive Unity-based Augmented Reality visualization platform.", colSpan: "md:col-span-1" },
+  { icon: Users, title: "Hackathon Organizer (3x)", desc: "Organized multiple National and College-Level hackathons. Mentored junior developers in AR/VR and Git workflow optimization.", colSpan: "md:col-span-1" },
 ];
 
 const ExperienceCard = ({ item, i }: { item: typeof achievements[0]; i: number }) => {
