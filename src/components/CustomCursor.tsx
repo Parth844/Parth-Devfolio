@@ -29,7 +29,9 @@ const CustomCursor = () => {
             if (
                 window.getComputedStyle(target).cursor === "pointer" ||
                 target.tagName.toLowerCase() === "a" ||
-                target.tagName.toLowerCase() === "button"
+                target.tagName.toLowerCase() === "button" ||
+                target.closest('a') ||
+                target.closest('button')
             ) {
                 setIsPointer(true);
             } else {
@@ -68,7 +70,8 @@ const CustomCursor = () => {
                 }}
                 animate={{
                     scale: isPointer ? 3 : 1,
-                    backgroundColor: isPointer ? "hsl(var(--primary) / 0.5)" : "hsl(var(--primary))"
+                    backgroundColor: isPointer ? "transparent" : "hsl(var(--primary))",
+                    border: isPointer ? "1px solid hsl(var(--primary))" : "none"
                 }}
                 transition={{ scale: { type: "spring", stiffness: 300, damping: 20 } }}
             />

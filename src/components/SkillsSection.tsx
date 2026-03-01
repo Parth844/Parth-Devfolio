@@ -5,7 +5,6 @@ const skillCategories = [
   { title: "UI/UX Design", skills: ["Figma", "Adobe XD", "Photoshop", "Illustrator"], color: "from-primary to-primary/60" },
   { title: "Programming", skills: ["Python", "Java", "C++", "JavaScript"], color: "from-accent to-accent/60" },
   { title: "AI & Machine Learning", skills: ["TensorFlow", "Computer Vision", "NLP", "Data Science"], color: "from-primary to-accent" },
-  { title: "Blockchain & Web3", skills: ["Smart Contracts", "DApps", "Solidity", "Ethereum"], color: "from-accent to-primary" },
   { title: "Game Dev & XR", skills: ["Unity", "AR/VR", "3D Modeling", "Computer Vision"], color: "from-primary/80 to-accent/80" },
 ];
 
