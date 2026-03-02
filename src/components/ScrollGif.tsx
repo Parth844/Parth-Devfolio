@@ -126,9 +126,9 @@ const ScrollGif = () => {
 
     return (
         <div
-            className="fixed z-[100] pointer-events-none transition-all duration-300 ease-out flex items-center justify-center p-2"
+            className="fixed z-[100] pointer-events-none transition-all duration-300 ease-out flex items-center justify-center p-0"
             style={{
-                right: '0px',
+                right: '0.8px',
                 top: `${topPercentage}%`,
                 transform: `translateY(-50%) rotate(${rotation})`
             }}
