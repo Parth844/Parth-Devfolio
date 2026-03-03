@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
 import { ArrowDown, Send, Download } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -18,7 +18,6 @@ const HeroSection = () => {
   const buttonsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // High-impact, stark Entry Animation
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
     tl.fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" })
@@ -27,19 +26,48 @@ const HeroSection = () => {
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
       .fromTo(buttonsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
 
-    // Strict Scroll Scrubbing
-    gsap.to(textRef.current, {
-      y: "30%",
-      opacity: 0,
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      }
-    });
+    if (textRef.current) {
+        gsap.to(".hero-title-upper", {
+            y: "-150%",
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+            }
+        });
 
+        gsap.to(".hero-title-lower", {
+            y: "150%",
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+            }
+        });
+
+        gsap.fromTo(".middle-3d-model", {
+            scale: 0.05,
+            y: "15vh",
+            opacity: 0,
+        }, {
+            scale: 1,
+            y: "-5vh",
+            opacity: 1,
+            ease: "none",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+            }
+        });
+    }
   }, { scope: sectionRef });
 
   useEffect(() => {
@@ -67,14 +95,12 @@ const HeroSection = () => {
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-center section-padding overflow-hidden bg-background border-b border-border">
 
-      {/* Absolute strict grid lines mimicking Shopify Editions */}
       <div className="absolute inset-x-0 top-0 h-px bg-border/40" />
       <div className="absolute inset-y-0 left-[10%] w-px bg-border/20 hidden md:block" />
       <div className="absolute inset-y-0 right-[10%] w-px bg-border/20 hidden md:block" />
 
       <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
 
-        {/* Left Tracking Column */}
         <div className="md:col-span-3 pb-8 hero-tag">
           <div ref={lineRef} className="h-[2px] w-12 bg-primary mb-6" />
           <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">
@@ -85,15 +111,31 @@ const HeroSection = () => {
           </p>
         </div>
 
-        {/* Massive Central Typography */}
-        <div className="md:col-span-9">
-          <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] lg:text-[8rem] font-bold leading-[0.9] tracking-tighter mb-8 text-foreground uppercase">
-            <div className="overflow-hidden pb-2"><div className="hero-title-line">Designing</div></div>
-            <div className="overflow-hidden pb-2"><div className="hero-title-line">The Future</div></div>
-            <div className="overflow-hidden"><div className="hero-title-line text-primary">With AI</div></div>
+        <div className="md:col-span-9 relative border-border" style={{ minHeight: "400px" }}>
+          
+          <div className="middle-3d-model absolute top-[10%] left-1/2 -translate-x-1/2 w-[120%] h-[120%] max-w-[800px] aspect-video z-0 pointer-events-auto mix-blend-screen bg-black/50">
+            <iframe 
+                title="Star Wars - Delta 7 Jedi Starfighter" 
+                frameBorder="0" 
+                allowFullScreen={true}
+                allow="autoplay; fullscreen; xr-spatial-tracking" 
+                src="https://sketchfab.com/models/053a14f9353a4f4aa6300fa0a398ffab/embed?autostart=1&transparent=1&ui_animations=0&ui_infos=0&ui_stop=0&ui_inspector=0&ui_watermark_link=0&ui_watermark=0&ui_hint=0&ui_theme=dark" 
+                className="w-full h-full"
+            ></iframe>
+          </div>
+
+          <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] lg:text-[8rem] font-bold leading-[0.9] tracking-tighter mb-8 text-foreground uppercase relative z-10 pointer-events-none">
+            <div className="hero-title-upper relative">
+              <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4 pt-1">Designing</div></div>
+            </div>
+            
+            <div className="hero-title-lower relative mt-2 md:mt-4">
+              <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4">The Future</div></div>
+              <div className="overflow-hidden"><div className="hero-title-line text-primary drop-shadow-md">With AI</div></div>
+            </div>
           </h1>
 
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-t border-border pt-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-t border-border pt-8 relative z-10">
             <div className="hero-role">
               <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide">
                 <span className="text-foreground font-medium">Role:</span> {text}
@@ -104,20 +146,20 @@ const HeroSection = () => {
             <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300"
+                className="px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto"
               >
                 View Projects
               </button>
               <a
                 href="/Parth_Tyagi_Resume.pdf"
                 download="Parth_Tyagi_Resume.pdf"
-                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"
               >
                 <Download size={16} /> Resume
               </a>
               <a
                 href="mailto:Parthtyagi520@gmail.com"
-                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"
               >
                 <Send size={16} /> Contact
               </a>
@@ -125,7 +167,7 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-10 right-10 animate-bounce text-muted-foreground hover:text-primary transition-colors hidden md:block">
+        <div className="absolute bottom-10 right-10 animate-bounce text-muted-foreground hover:text-primary transition-colors hidden md:block relative z-10">
           <ArrowDown size={32} strokeWidth={1} />
         </div>
       </div>
