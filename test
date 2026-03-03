@@ -1,0 +1,35 @@
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const roles = ["AI/ML Developer", "UI/UX Designer", "Software Developer", "AR/VR Explorer"];
+
+const HeroSection = () => {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [text, setText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+--
+        });
+    }
+  }, { scope: sectionRef });
+
+  useEffect(() => {
+    const current = roles[roleIndex];
+    const timeout = setTimeout(
+      () => {
+        if (!isDeleting) {
+          setText(current.slice(0, text.length + 1));
+          if (text.length + 1 === current.length) {
+--
+          }
+        } else {
+          setText(current.slice(0, text.length - 1));
+          if (text.length === 0) {
+            setIsDeleting(false);
+            setRoleIndex((i) => (i + 1) % roles.length);
+          }
+        }
+      },
+      isDeleting ? 40 : 80
+    );

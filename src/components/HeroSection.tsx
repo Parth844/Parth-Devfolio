@@ -3,10 +3,18 @@ import { ArrowDown, Send, Download } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, Stage, PresentationControls } from "@react-three/drei";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const roles = ["AI/ML Developer", "UI/UX Designer", "Software Developer", "AR/VR Explorer"];
+
+function StarfighterModel(props: any) {
+  const { scene } = useGLTF("/star_wars_ship.glb");
+  return <primitive object={scene} scale={[4, 4, 4]} rotation={[0, -Math.PI / 4, 0]} {...props} />;
+}
+useGLTF.preload("/star_wars_ship.glb");
 
 const HeroSection = () => {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -27,46 +35,40 @@ const HeroSection = () => {
       .fromTo(buttonsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
 
     if (textRef.current) {
-        gsap.to(".hero-title-upper", {
-            y: "-150%",
-            opacity: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-            }
-        });
+      const scrollTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=250%",
+          scrub: 1.5,
+          pin: true,
+        }
+      });
 
-        gsap.to(".hero-title-lower", {
-            y: "150%",
-            opacity: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-            }
-        });
+      scrollTl.to(".hero-title-upper", {
+        y: "-100%",
+        opacity: 0,
+        ease: "power2.inOut",
+      }, 0);
 
-        gsap.fromTo(".middle-3d-model", {
-            scale: 0.05,
-            y: "15vh",
-            opacity: 0,
-        }, {
-            scale: 1,
-            y: "-5vh",
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-            }
-        });
+      scrollTl.to(".hero-title-lower", {
+        y: "100%",
+        opacity: 0,
+        ease: "power2.inOut",
+      }, 0);
+
+      scrollTl.fromTo(".middle-3d-model", {
+        scale: 0.05,
+        x: "50%",
+        y: 0,
+        opacity: 0,
+      }, {
+        scale: 1,
+        x: 0,
+        y: "-12vh",
+        opacity: 1,
+        ease: "power1.inOut",
+      }, 0);
     }
   }, { scope: sectionRef });
 
@@ -99,7 +101,21 @@ const HeroSection = () => {
       <div className="absolute inset-y-0 left-[10%] w-px bg-border/20 hidden md:block" />
       <div className="absolute inset-y-0 right-[10%] w-px bg-border/20 hidden md:block" />
 
-      <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+      {/* 3D Model background */}
+      <div className="middle-3d-model absolute inset-0 w-screen h-screen z-0 pointer-events-auto mix-blend-screen bg-transparent flex items-center justify-center overflow-hidden">
+        <Canvas dpr={[1, 2]} camera={{ fov: 45 }} className="w-full h-full block">
+          <color attach="background" args={['#000000']} />
+          <PresentationControls speed={1.5} global zoom={1.5} polar={[-0.1, Math.PI / 4]}>
+            <Stage environment={null} intensity={1} shadows={false} adjustCamera={false}>
+              <ambientLight intensity={2} />
+              <directionalLight position={[10, 10, 10]} intensity={2} />
+              <StarfighterModel />
+            </Stage>
+          </PresentationControls>
+        </Canvas>
+      </div>
+
+      <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end pointer-events-none">
 
         <div className="md:col-span-3 pb-8 hero-tag">
           <div ref={lineRef} className="h-[2px] w-12 bg-primary mb-6" />
@@ -112,23 +128,11 @@ const HeroSection = () => {
         </div>
 
         <div className="md:col-span-9 relative border-border" style={{ minHeight: "400px" }}>
-          
-          <div className="middle-3d-model absolute top-[10%] left-1/2 -translate-x-1/2 w-[120%] h-[120%] max-w-[800px] aspect-video z-0 pointer-events-auto mix-blend-screen bg-black/50">
-            <iframe 
-                title="Star Wars - Delta 7 Jedi Starfighter" 
-                frameBorder="0" 
-                allowFullScreen={true}
-                allow="autoplay; fullscreen; xr-spatial-tracking" 
-                src="https://sketchfab.com/models/053a14f9353a4f4aa6300fa0a398ffab/embed?autostart=1&transparent=1&ui_animations=0&ui_infos=0&ui_stop=0&ui_inspector=0&ui_watermark_link=0&ui_watermark=0&ui_hint=0&ui_theme=dark" 
-                className="w-full h-full"
-            ></iframe>
-          </div>
-
           <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] lg:text-[8rem] font-bold leading-[0.9] tracking-tighter mb-8 text-foreground uppercase relative z-10 pointer-events-none">
             <div className="hero-title-upper relative">
               <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4 pt-1">Designing</div></div>
             </div>
-            
+
             <div className="hero-title-lower relative mt-2 md:mt-4">
               <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4">The Future</div></div>
               <div className="overflow-hidden"><div className="hero-title-line text-primary drop-shadow-md">With AI</div></div>
