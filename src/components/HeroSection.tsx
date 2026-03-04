@@ -1,19 +1,276 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
+import { motion } from "framer-motion";
 import { ArrowDown, Send, Download } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Canvas } from "@react-three/fiber";
-import { useGLTF, Stage, PresentationControls } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useGLTF, Center, Sparkles, PresentationControls, Stars, Html } from "@react-three/drei";
+import * as THREE from "three";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const TitleSparkles = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-visible">
+    {[...Array(12)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute w-[2px] h-[2px] bg-primary rounded-full"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          boxShadow: '0 0 10px 1px rgba(0, 255, 128, 0.8)',
+        }}
+        animate={{
+          opacity: [0, 1, 0],
+          scale: [0, 1.5, 0],
+          y: [0, -30],
+          x: [0, (Math.random() - 0.5) * 30],
+        }}
+        transition={{
+          duration: 2 + Math.random() * 3,
+          repeat: Infinity,
+          delay: Math.random() * 5,
+          ease: "easeInOut"
+        }}
+      />
+    ))}
+  </div>
+);
+
 const roles = ["AI/ML Developer", "UI/UX Designer", "Software Developer", "AR/VR Explorer"];
 
-function StarfighterModel(props: any) {
+// Individual Laser Beam Component
+const LaserBeam = ({ direction, onComplete }: { direction: THREE.Vector3, onComplete: () => void }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const startTime = useRef(Date.now());
+  const speed = 50;
+  const lifetime = 1000; // 1 second
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const elapsed = Date.now() - startTime.current;
+
+    if (elapsed > lifetime) {
+      onComplete();
+      return;
+    }
+
+    // Move laser in its direction
+    meshRef.current.position.addScaledVector(direction, speed * 0.016);
+
+    // Fade out as it ages
+    const opacity = 1 - (elapsed / lifetime);
+    if (meshRef.current.material instanceof THREE.MeshBasicMaterial) {
+      meshRef.current.material.opacity = opacity;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} rotation-z={Math.atan2(direction.y, direction.x) - Math.PI / 2}>
+      <cylinderGeometry args={[0.04, 0.04, 2, 8]} />
+      <meshBasicMaterial color="#ff0000" transparent opacity={1} blending={THREE.AdditiveBlending} />
+      {/* Laser Glow */}
+      <pointLight color="#ff0000" intensity={5} distance={2} />
+    </mesh>
+  );
+};
+
+const Hotspot = ({ label, onClick, position }: { label: string, onClick: () => void, position: [number, number, number] }) => (
+  <Html position={position} center distanceFactor={10}>
+    <button
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      className="group relative flex flex-col items-center justify-center p-4 cursor-pointer"
+    >
+      {/* Subtle Outer Glow */}
+      <div className="absolute inset-0 w-12 h-12 rounded-full bg-primary/5 animate-pulse blur-lg group-hover:bg-primary/10 transition-colors duration-500" />
+      <div className="absolute inset-0 w-8 h-8 m-auto rounded-full bg-primary/10 animate-ping opacity-30" />
+
+      {/* Elegant Light Gradient Button */}
+      <div className="relative w-3.5 h-3.5 rounded-full bg-gradient-to-br from-white via-primary/30 to-primary/10 shadow-[0_0_15px_rgba(255,255,255,0.3),0_0_5px_rgba(255,255,255,0.1),inset_0_0_2px_rgba(255,255,255,0.5)] border border-white/20 transition-all duration-500 group-hover:scale-125" />
+
+      {/* Subtle Label HUD */}
+      <div className="mt-3 px-3 py-1 bg-black/60 backdrop-blur-md rounded-full border border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 shadow-lg">
+        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/90 whitespace-nowrap">
+          {label}
+        </span>
+      </div>
+    </button>
+  </Html>
+);
+
+function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0, 0], currentView = 'front', onViewChange, ...props }: { isFixed: boolean, scrollScale?: number, targetBaseRotation?: [number, number, number], currentView?: string, onViewChange?: (view: any) => void } & any) {
   const { scene } = useGLTF("/star_wars_ship.glb");
-  return <primitive object={scene} scale={[4, 4, 4]} rotation={[0, -Math.PI / 4, 0]} {...props} />;
+  const [scale, setScale] = useState<[number, number, number]>([4, 4, 4]);
+  const groupRef = useRef<THREE.Group>(null);
+  const baseRotationRef = useRef(new THREE.Euler(0, 0, 0));
+  const [lasers, setLasers] = useState<{ id: number, dir: THREE.Vector3 }[]>([]);
+  const lastFireTime = useRef(0);
+  const fireRate = 120; // ms
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScale(window.innerWidth < 768 ? [2.0, 2.0, 2.0] : [5.5, 5.5, 5.5]);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+
+    baseRotationRef.current.x = THREE.MathUtils.lerp(baseRotationRef.current.x, targetBaseRotation[0], 0.05);
+    baseRotationRef.current.y = THREE.MathUtils.lerp(baseRotationRef.current.y, targetBaseRotation[1], 0.05);
+    baseRotationRef.current.z = THREE.MathUtils.lerp(baseRotationRef.current.z, targetBaseRotation[2], 0.05);
+
+    if (isFixed) {
+      const isFront = currentView === 'front';
+      const targetRotationX = isFront ? (-state.pointer.y * 0.4 + baseRotationRef.current.x) : baseRotationRef.current.x;
+      const targetRotationY = isFront ? (state.pointer.x * 0.4 + baseRotationRef.current.y) : baseRotationRef.current.y;
+
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.05);
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.05);
+
+      const targetPosX = state.pointer.x * 0.5;
+      const targetPosY = (state.pointer.y * 0.5);
+
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetPosX, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetPosY, 0.05);
+
+      groupRef.current.position.y += Math.sin(state.clock.elapsedTime) * 0.002;
+
+      const px = state.pointer.x;
+      const py = state.pointer.y;
+      const mag = Math.sqrt(px * px + py * py);
+
+      if (!groupRef.current.userData.hasFired && mag > 0.7) {
+        groupRef.current.userData.hasFired = true;
+        const dir = new THREE.Vector3();
+        const angle = Math.atan2(py, px);
+        const quantizedAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
+        dir.set(Math.cos(quantizedAngle), Math.sin(quantizedAngle), 0).normalize();
+        const count = Math.floor(Math.random() * 3) + 1;
+        const newLasers = Array.from({ length: count }).map((_, i) => ({
+          id: Date.now() + Math.random() + i,
+          dir: dir.clone()
+        }));
+        setLasers(prev => [...prev.slice(-10), ...newLasers]);
+      } else if (mag < 0.5) {
+        groupRef.current.userData.hasFired = false;
+      }
+    } else {
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, baseRotationRef.current.x, 0.05);
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, baseRotationRef.current.y, 0.05);
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, 0, 0.05);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, 0, 0.05);
+    }
+  });
+
+  return (
+    <Center>
+      <group ref={groupRef} scale={scrollScale}>
+        <primitive object={scene} scale={scale} rotation={[0, 0, 0]} {...props} />
+        <group position={[0, 0.2, -1.8]}>
+          <Sparkles count={200} scale={[0.5, 0.5, 2]} size={1.5} speed={4} color="#ff3300" opacity={1} />
+          <pointLight intensity={30} distance={4} color="#ff3300" />
+        </group>
+
+        {lasers.map(laser => (
+          <LaserBeam key={laser.id} direction={laser.dir} onComplete={() => setLasers(prev => prev.filter(l => l.id !== laser.id))} />
+        ))}
+
+        {/* Dynamic View Hotspots directly on the model */}
+        {isFixed && (
+          <group>
+            {currentView === 'front' && (
+              <>
+                <Hotspot label="Left" position={[-3.5, 0, 0]} onClick={() => onViewChange?.('left')} />
+                <Hotspot label="Right" position={[3.5, 0, 0]} onClick={() => onViewChange?.('right')} />
+                <Hotspot label="Top" position={[0, 1.8, 0]} onClick={() => onViewChange?.('top')} />
+              </>
+            )}
+
+            {currentView === 'back' && (
+              <>
+                <Hotspot label="Left" position={[-3.5, 0, 0]} onClick={() => onViewChange?.('left')} />
+                <Hotspot label="Right" position={[3.5, 0, 0]} onClick={() => onViewChange?.('right')} />
+                <Hotspot label="Top" position={[0, 1.8, 0]} onClick={() => onViewChange?.('top')} />
+                <Hotspot label="Front" position={[0, 0.5, 4]} onClick={() => onViewChange?.('front')} />
+              </>
+            )}
+
+            {(currentView === 'left' || currentView === 'right' || currentView === 'top') && (
+              <>
+                <Hotspot label="Front" position={[0, 0.5, 3.5]} onClick={() => onViewChange?.('front')} />
+                <Hotspot label="Rear" position={[0, 1, -4]} onClick={() => onViewChange?.('back')} />
+              </>
+            )}
+          </group>
+        )}
+      </group>
+    </Center>
+  );
 }
+
+const HeroStarStreaks = ({ progress }: { progress: number }) => {
+  const count = 400;
+  const [lines, colors] = useMemo(() => {
+    const positions = new Float32Array(count * 6);
+    const colors = new Float32Array(count * 6);
+    const colorPalette = ["#00f3ff", "#ffffff", "#0078ff", "#a5f3fc", "#ffffff"];
+
+    for (let i = 0; i < count; i++) {
+      const radius = 5 + Math.random() * 30;
+      const angle = Math.random() * Math.PI * 2;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      const z = Math.random() * -1000;
+      const length = 40 + Math.random() * 60;
+      positions[i * 6] = x;
+      positions[i * 6 + 1] = y;
+      positions[i * 6 + 2] = z;
+      positions[i * 6 + 3] = x;
+      positions[i * 6 + 4] = y;
+      positions[i * 6 + 5] = z - length;
+      const color = new THREE.Color(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+      colors[i * 6] = color.r;
+      colors[i * 6 + 1] = color.g;
+      colors[i * 6 + 2] = color.b;
+      colors[i * 6 + 3] = color.r * 0.1;
+      colors[i * 6 + 4] = color.g * 0.1;
+      colors[i * 6 + 5] = color.b * 0.1;
+    }
+    return [positions, colors];
+  }, []);
+
+  const meshRef = useRef<THREE.LineSegments>(null);
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const pos = meshRef.current.geometry.attributes.position.array as Float32Array;
+    const speed = 5;
+    for (let i = 0; i < count; i++) {
+      pos[i * 6 + 2] += speed;
+      pos[i * 6 + 5] += speed;
+      if (pos[i * 6 + 2] > 100) {
+        pos[i * 6 + 2] = -1000;
+        pos[i * 6 + 5] = -1060;
+      }
+    }
+    meshRef.current.geometry.attributes.position.needsUpdate = true;
+  });
+
+  return (
+    <lineSegments ref={meshRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={lines.length / 3} array={lines} itemSize={3} />
+        <bufferAttribute attach="attributes-color" count={colors.length / 3} array={colors} itemSize={3} />
+      </bufferGeometry>
+      <lineBasicMaterial vertexColors transparent opacity={Math.min(0.3, progress) * (1 - Math.pow(progress, 15))} blending={THREE.AdditiveBlending} />
+    </lineSegments>
+  );
+};
+
 useGLTF.preload("/star_wars_ship.glb");
 
 const HeroSection = () => {
@@ -24,153 +281,108 @@ const HeroSection = () => {
   const textRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const [isModelFixed, setIsModelFixed] = useState(false);
+  const [modelScaleProgress, setModelScaleProgress] = useState(0);
+  const [activeView, setActiveView] = useState<'front' | 'back' | 'left' | 'right' | 'top'>('front');
+
+  const viewRotations: Record<string, [number, number, number]> = {
+    front: [0, 0, 0],
+    back: [0, Math.PI, 0],
+    left: [0, -Math.PI / 2, 0],
+    right: [0, Math.PI / 2, 0],
+    top: [Math.PI / 2, 0, 0],
+  };
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-
     tl.fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" })
       .fromTo(".hero-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=1.0")
-      .fromTo(".hero-title-line", { y: 100, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.15, duration: 1.2 }, "-=0.8")
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
       .fromTo(buttonsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
 
     if (textRef.current) {
-      const scrollTl = gsap.timeline({
+      gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=250%",
+          end: "+=500%",
           scrub: 1.5,
           pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const scaleStart = 0.05;
+            const scaleEnd = 0.30;
+            const progress = self.progress;
+            const clampedProgress = gsap.utils.clamp(scaleStart, scaleEnd, progress);
+            const newScale = gsap.utils.mapRange(scaleStart, scaleEnd, 0, 1, clampedProgress);
+            setModelScaleProgress(newScale);
+            setIsModelFixed(progress > scaleEnd);
+          }
         }
       });
-
-      scrollTl.to(".hero-title-upper", {
-        y: "-100%",
-        opacity: 0,
-        ease: "power2.inOut",
-      }, 0);
-
-      scrollTl.to(".hero-title-lower", {
-        y: "100%",
-        opacity: 0,
-        ease: "power2.inOut",
-      }, 0);
-
-      scrollTl.fromTo(".middle-3d-model", {
-        scale: 0.05,
-        x: "50%",
-        y: 0,
-        opacity: 0,
-      }, {
-        scale: 1,
-        x: 0,
-        y: "-12vh",
-        opacity: 1,
-        ease: "power1.inOut",
-      }, 0);
     }
   }, { scope: sectionRef });
 
   useEffect(() => {
     const current = roles[roleIndex];
-    const timeout = setTimeout(
-      () => {
-        if (!isDeleting) {
-          setText(current.slice(0, text.length + 1));
-          if (text.length + 1 === current.length) {
-            setTimeout(() => setIsDeleting(true), 1500);
-          }
-        } else {
-          setText(current.slice(0, text.length - 1));
-          if (text.length === 0) {
-            setIsDeleting(false);
-            setRoleIndex((i) => (i + 1) % roles.length);
-          }
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setText(current.slice(0, text.length + 1));
+        if (text.length + 1 === current.length) setTimeout(() => setIsDeleting(true), 1500);
+      } else {
+        setText(current.slice(0, text.length - 1));
+        if (text.length === 0) {
+          setIsDeleting(false);
+          setRoleIndex((i) => (i + 1) % roles.length);
         }
-      },
-      isDeleting ? 40 : 80
-    );
+      }
+    }, isDeleting ? 40 : 80);
     return () => clearTimeout(timeout);
   }, [text, isDeleting, roleIndex]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-center section-padding overflow-hidden bg-background border-b border-border">
-
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-end px-6 md:px-12 lg:px-20 xl:px-32 pb-2 md:pb-4 overflow-hidden bg-background border-b border-border z-20">
       <div className="absolute inset-x-0 top-0 h-px bg-border/40" />
       <div className="absolute inset-y-0 left-[10%] w-px bg-border/20 hidden md:block" />
       <div className="absolute inset-y-0 right-[10%] w-px bg-border/20 hidden md:block" />
 
-      {/* 3D Model background */}
-      <div className="middle-3d-model absolute inset-0 w-screen h-screen z-0 pointer-events-auto mix-blend-screen bg-transparent flex items-center justify-center overflow-hidden">
-        <Canvas dpr={[1, 2]} camera={{ fov: 45 }} className="w-full h-full block">
+      <div className="middle-3d-model absolute inset-0 z-0 pointer-events-auto flex items-center justify-center overflow-hidden transition-opacity duration-500" style={{ opacity: modelScaleProgress > 0.01 ? 1 : 0 }}>
+        <Canvas dpr={[1, 2]} camera={{ fov: 45, position: [0, 0, 15] }} className="w-full h-full">
           <color attach="background" args={['#000000']} />
-          <PresentationControls speed={1.5} global zoom={1.5} polar={[-0.1, Math.PI / 4]}>
-            <Stage environment={null} intensity={1} shadows={false} adjustCamera={false}>
-              <ambientLight intensity={2} />
-              <directionalLight position={[10, 10, 10]} intensity={2} />
-              <StarfighterModel />
-            </Stage>
+          <ambientLight intensity={1.5} />
+          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
+          <pointLight position={[-10, -10, -10]} intensity={1} />
+          <Stars radius={100} depth={50} count={Math.floor(modelScaleProgress * 5000)} factor={4} saturation={0} fade speed={1} />
+          <HeroStarStreaks progress={modelScaleProgress} />
+          <PresentationControls global cursor={false} speed={4} config={{ mass: 1, tension: 1000 }} snap={{ mass: 2, tension: 1500 }} rotation={[0, 0, 0]} polar={[-Math.PI / 2, Math.PI / 2]} azimuth={[-Math.PI, Math.PI]}>
+            <group position={[0, 0, 0]}>
+              <StarfighterModel isFixed={isModelFixed} scrollScale={modelScaleProgress} targetBaseRotation={viewRotations[activeView]} currentView={activeView} onViewChange={setActiveView} />
+            </group>
           </PresentationControls>
         </Canvas>
       </div>
 
       <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end pointer-events-none">
-
         <div className="md:col-span-3 pb-8 hero-tag">
           <div ref={lineRef} className="h-[2px] w-12 bg-primary mb-6" />
-          <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">
-            Portfolio v3.0
-          </p>
-          <p className="text-foreground text-sm font-semibold">
-            Parth Tyagi
-          </p>
+          <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
+          <p className="text-foreground text-sm font-semibold">Parth Tyagi</p>
         </div>
-
-        <div className="md:col-span-9 relative border-border" style={{ minHeight: "400px" }}>
-          <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] lg:text-[8rem] font-bold leading-[0.9] tracking-tighter mb-8 text-foreground uppercase relative z-10 pointer-events-none">
-            <div className="hero-title-upper relative">
-              <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4 pt-1">Designing</div></div>
-            </div>
-
-            <div className="hero-title-lower relative mt-2 md:mt-4">
-              <div className="overflow-hidden pb-2"><div className="hero-title-line drop-shadow-md pb-4">The Future</div></div>
-              <div className="overflow-hidden"><div className="hero-title-line text-primary drop-shadow-md">With AI</div></div>
-            </div>
-          </h1>
-
+        <div className="md:col-span-9 relative border-border min-h-[350px] md:min-h-[400px] flex flex-col justify-center md:justify-end">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-t border-border pt-8 relative z-10">
-            <div className="hero-role">
+            <div className="hero-role mb-6 md:mb-0">
               <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide">
-                <span className="text-foreground font-medium">Role:</span> {text}
-                <span className="animate-pulse text-primary ml-1">|</span>
+                <span className="text-foreground font-medium">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
               </p>
             </div>
-
             <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                className="px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto"
-              >
-                View Projects
-              </button>
-              <a
-                href="/Parth_Tyagi_Resume.pdf"
-                download="Parth_Tyagi_Resume.pdf"
-                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"
-              >
-                <Download size={16} /> Resume
-              </a>
-              <a
-                href="mailto:Parthtyagi520@gmail.com"
-                className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"
-              >
-                <Send size={16} /> Contact
-              </a>
+              <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
+              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
+              <a href="mailto:Parthtyagi520@gmail.com" className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
             </div>
           </div>
         </div>
-
         <div className="absolute bottom-10 right-10 animate-bounce text-muted-foreground hover:text-primary transition-colors hidden md:block relative z-10">
           <ArrowDown size={32} strokeWidth={1} />
         </div>

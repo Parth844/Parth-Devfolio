@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollProgress from "@/components/ScrollProgress";
 import CursorGlow from "@/components/CursorGlow";
@@ -10,26 +12,37 @@ import ExperienceSection from "@/components/ExperienceSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const Index = () => {
+  const [loading, setLoading] = useState(true);
+
   return (
-    <SmoothScroll>
-      <div className="min-h-screen bg-background text-foreground">
-        <ParticleBackground />
-        <ScrollProgress />
-        <CursorGlow />
-        <Navbar />
-        <main>
-          <HeroSection />
-          <AboutSection />
-          <SkillsSection />
-          <ProjectsSection />
-          <ExperienceSection />
-          <ContactSection />
-        </main>
-        <Footer />
-      </div>
-    </SmoothScroll>
+    <>
+      <AnimatePresence mode="wait">
+        {loading && <LoadingScreen onFinished={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      {!loading && (
+        <SmoothScroll>
+          <div className="min-h-screen bg-background text-foreground">
+            <ParticleBackground />
+            <ScrollProgress />
+            <CursorGlow />
+            <Navbar />
+            <main>
+              <HeroSection />
+              <AboutSection />
+              <SkillsSection />
+              <ProjectsSection />
+              <ExperienceSection />
+              <ContactSection />
+            </main>
+            <Footer />
+          </div>
+        </SmoothScroll>
+      )}
+    </>
   );
 };
 

@@ -78,7 +78,8 @@
     button,
     input,
     select,
-    textarea {
+    textarea,
+    canvas {
       cursor: none !important;
     }
   }

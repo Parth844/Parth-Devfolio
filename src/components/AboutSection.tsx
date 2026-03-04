@@ -42,7 +42,7 @@ const AboutSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section id="about" className="border-b border-border bg-background relative" ref={containerRef}>
+    <section id="about" className="border-b border-border bg-background relative z-10" ref={containerRef}>
       <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-2 relative">
 
         {/* Left Column - Pinned */}
