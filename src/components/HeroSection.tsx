@@ -68,10 +68,10 @@ const LaserBeam = ({ direction, onComplete }: { direction: THREE.Vector3, onComp
 
   return (
     <mesh ref={meshRef} rotation-z={Math.atan2(direction.y, direction.x) - Math.PI / 2}>
-      <cylinderGeometry args={[0.04, 0.04, 2, 8]} />
-      <meshBasicMaterial color="#ff0000" transparent opacity={1} blending={THREE.AdditiveBlending} />
+      <cylinderGeometry args={[0.015, 0.015, 0.8, 8]} />
+      <meshBasicMaterial color="#ff0000" transparent opacity={0.8} blending={THREE.AdditiveBlending} />
       {/* Laser Glow */}
-      <pointLight color="#ff0000" intensity={5} distance={2} />
+      <pointLight color="#ff0000" intensity={3} distance={1.5} />
     </mesh>
   );
 };
