@@ -285,6 +285,7 @@ const HeroSection = () => {
   const textRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
   const [isModelFixed, setIsModelFixed] = useState(false);
   const [modelScaleProgress, setModelScaleProgress] = useState(0);
   const [activeView, setActiveView] = useState<'front' | 'back' | 'left' | 'right' | 'top'>('front');
@@ -299,7 +300,18 @@ const HeroSection = () => {
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-    tl.fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" })
+
+    // Sequence 1: Intro Text Entrance
+    tl.fromTo(introRef.current,
+      { opacity: 0, scale: 0.9, filter: "blur(10px)" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out" }
+    )
+      // Sequence 2: Intro Text Exit (after holding)
+      .to(introRef.current,
+        { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 1, delay: 2, ease: "power2.in" }
+      )
+      // Sequence 3: Reveal rest of Hero UI
+      .fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" }, "-=0.5")
       .fromTo(".hero-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=1.0")
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
       .fromTo(buttonsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
@@ -350,6 +362,19 @@ const HeroSection = () => {
       <div className="absolute inset-x-0 top-0 h-px bg-border/40" />
       <div className="absolute inset-y-0 left-[10%] w-px bg-border/20 hidden md:block" />
       <div className="absolute inset-y-0 right-[10%] w-px bg-border/20 hidden md:block" />
+
+      {/* Main Intro Text Overlay */}
+      <div
+        ref={introRef}
+        className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 text-center opacity-0"
+      >
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+          Turning Ideas into <span className="text-primary italic">Intelligent</span> Products
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground font-light tracking-[0.3em] uppercase max-w-2xl">
+          AI, design, and technology working together.
+        </p>
+      </div>
 
       <div className="middle-3d-model absolute inset-0 z-0 pointer-events-auto flex items-center justify-center overflow-hidden transition-opacity duration-500" style={{ opacity: modelScaleProgress > 0.01 ? 1 : 0 }}>
         <Canvas dpr={[1, 2]} camera={{ fov: 45, position: [0, 0, 15] }} className="w-full h-full">
