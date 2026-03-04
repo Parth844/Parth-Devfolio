@@ -306,11 +306,7 @@ const HeroSection = () => {
       { opacity: 0, scale: 0.9, filter: "blur(10px)" },
       { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out" }
     )
-      // Sequence 2: Intro Text Exit (after holding)
-      .to(introRef.current,
-        { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 1, delay: 2, ease: "power2.in" }
-      )
-      // Sequence 3: Reveal rest of Hero UI
+      // Sequence 2: Reveal rest of Hero UI
       .fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" }, "-=0.5")
       .fromTo(".hero-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=1.0")
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
@@ -334,6 +330,19 @@ const HeroSection = () => {
             const newScale = gsap.utils.mapRange(scaleStart, scaleEnd, 0, 1, clampedProgress);
             setModelScaleProgress(newScale);
             setIsModelFixed(progress > scaleEnd);
+
+            // Scroll-linked fade out for Intro Text
+            if (introRef.current) {
+              // Fades out between 0% and 15% of scroll progress
+              const introOpacity = gsap.utils.mapRange(0, 0.15, 1, 0, progress);
+              const introScale = gsap.utils.mapRange(0, 0.15, 1, 1.1, progress);
+
+              gsap.set(introRef.current, {
+                opacity: gsap.utils.clamp(0, 1, introOpacity),
+                scale: introScale,
+                filter: `blur(${gsap.utils.clamp(0, 10, progress * 100)}px)`
+              });
+            }
           }
         }
       });
