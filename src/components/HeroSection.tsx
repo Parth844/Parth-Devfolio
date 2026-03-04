@@ -306,11 +306,7 @@ const HeroSection = () => {
       { opacity: 0, scale: 0.9, filter: "blur(10px)" },
       { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out" }
     )
-      // Sequence 2: Intro Text Exit (after holding)
-      .to(introRef.current,
-        { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 1, delay: 2, ease: "power2.in" }
-      )
-      // Sequence 3: Reveal rest of Hero UI
+      // Sequence 2: Reveal rest of Hero UI
       .fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" }, "-=0.5")
       .fromTo(".hero-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=1.0")
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
@@ -335,13 +331,24 @@ const HeroSection = () => {
             setModelScaleProgress(newScale);
             setIsModelFixed(progress > scaleEnd);
 
-            // If user scrolls back to the very top, replay the intro sequence
-            if (progress === 0 && self.direction === -1) {
-              if (tl.progress() === 1) tl.restart();
-            }
-            // If user scrolls down while intro is still playing, skip to the end of the intro
-            else if (progress > 0.01 && tl.progress() < 1) {
-              tl.progress(1);
+            // Intro text scroll behavior
+            if (introRef.current) {
+              if (progress > 0) {
+                // If the user scrolls while entrance is playing, snap to end of entrance
+                if (tl.isActive()) tl.progress(1);
+
+                // Scrub the text away over the first 15% of scroll
+                const introScroll = gsap.utils.clamp(0, 1, progress / 0.15);
+                gsap.set(introRef.current, {
+                  opacity: 1 - introScroll,
+                  y: -introScroll * 400, // Move upwards as it fades
+                  scale: 1 + introScroll * 0.2, // Expand slightly
+                  filter: `blur(${introScroll * 15}px)`
+                });
+              } else if (progress === 0 && !tl.isActive()) {
+                // Reset to fully visible when scrolled all the way back up
+                gsap.set(introRef.current, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" });
+              }
             }
           }
         }
