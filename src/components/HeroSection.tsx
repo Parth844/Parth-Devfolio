@@ -334,6 +334,15 @@ const HeroSection = () => {
             const newScale = gsap.utils.mapRange(scaleStart, scaleEnd, 0, 1, clampedProgress);
             setModelScaleProgress(newScale);
             setIsModelFixed(progress > scaleEnd);
+
+            // If user scrolls back to the very top, replay the intro sequence
+            if (progress === 0 && self.direction === -1) {
+              if (tl.progress() === 1) tl.restart();
+            }
+            // If user scrolls down while intro is still playing, skip to the end of the intro
+            else if (progress > 0.01 && tl.progress() < 1) {
+              tl.progress(1);
+            }
           }
         }
       });
