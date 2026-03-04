@@ -89,9 +89,9 @@ const Hotspot = ({ label, onClick, position }: { label: string, onClick: () => v
       {/* Elegant Light Gradient Button */}
       <div className="relative w-3.5 h-3.5 rounded-full bg-gradient-to-br from-white via-primary/30 to-primary/10 shadow-[0_0_15px_rgba(255,255,255,0.3),0_0_5px_rgba(255,255,255,0.1),inset_0_0_2px_rgba(255,255,255,0.5)] border border-white/20 transition-all duration-500 group-hover:scale-125" />
 
-      {/* Subtle Label HUD */}
-      <div className="mt-3 px-3 py-1 bg-black/60 backdrop-blur-md rounded-full border border-white/5 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 shadow-lg">
-        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/90 whitespace-nowrap">
+      {/* Subtle Label HUD - Always visible on mobile */}
+      <div className="mt-3 px-3 py-1 bg-black/70 backdrop-blur-md rounded-full border border-white/5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 transform translate-y-0 md:translate-y-2 md:group-hover:translate-y-0 shadow-lg">
+        <span className="text-[10px] md:text-[9px] font-bold tracking-[0.2em] uppercase text-white/90 whitespace-nowrap">
           {label}
         </span>
       </div>
@@ -170,44 +170,48 @@ function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0
   return (
     <Center>
       <group ref={groupRef} scale={scrollScale}>
-        <primitive object={scene} scale={scale} rotation={[0, 0, 0]} {...props} />
-        <group position={[0, 0.2, -1.8]}>
-          <Sparkles count={200} scale={[0.5, 0.5, 2]} size={1.5} speed={4} color="#ff3300" opacity={1} />
-          <pointLight intensity={30} distance={4} color="#ff3300" />
-        </group>
+        {/* Wrap everything in a responsive scale group so points stay attached on mobile */}
+        <group scale={scale}>
+          <primitive object={scene} rotation={[0, 0, 0]} {...props} />
 
-        {lasers.map(laser => (
-          <LaserBeam key={laser.id} direction={laser.dir} onComplete={() => setLasers(prev => prev.filter(l => l.id !== laser.id))} />
-        ))}
-
-        {/* Dynamic View Hotspots directly on the model */}
-        {isFixed && (
-          <group>
-            {currentView === 'front' && (
-              <>
-                <Hotspot label="Left" position={[-3.5, 0, 0]} onClick={() => onViewChange?.('left')} />
-                <Hotspot label="Right" position={[3.5, 0, 0]} onClick={() => onViewChange?.('right')} />
-                <Hotspot label="Top" position={[0, 1.8, 0]} onClick={() => onViewChange?.('top')} />
-              </>
-            )}
-
-            {currentView === 'back' && (
-              <>
-                <Hotspot label="Left" position={[-3.5, 0, 0]} onClick={() => onViewChange?.('left')} />
-                <Hotspot label="Right" position={[3.5, 0, 0]} onClick={() => onViewChange?.('right')} />
-                <Hotspot label="Top" position={[0, 1.8, 0]} onClick={() => onViewChange?.('top')} />
-                <Hotspot label="Front" position={[0, 0.5, 4]} onClick={() => onViewChange?.('front')} />
-              </>
-            )}
-
-            {(currentView === 'left' || currentView === 'right' || currentView === 'top') && (
-              <>
-                <Hotspot label="Front" position={[0, 0.5, 3.5]} onClick={() => onViewChange?.('front')} />
-                <Hotspot label="Rear" position={[0, 1, -4]} onClick={() => onViewChange?.('back')} />
-              </>
-            )}
+          <group position={[0, 0.04, -0.33]}>
+            <Sparkles count={200} scale={[0.1, 0.1, 0.4]} size={1.5} speed={4} color="#ff3300" opacity={1} />
+            <pointLight intensity={30} distance={1} color="#ff3300" />
           </group>
-        )}
+
+          {lasers.map(laser => (
+            <LaserBeam key={laser.id} direction={laser.dir} onComplete={() => setLasers(prev => prev.filter(l => l.id !== laser.id))} />
+          ))}
+
+          {/* Dynamic View Hotspots (Normalized coordinates) */}
+          {isFixed && (
+            <group>
+              {currentView === 'front' && (
+                <>
+                  <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
+                  <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                  <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
+                </>
+              )}
+
+              {currentView === 'back' && (
+                <>
+                  <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
+                  <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                  <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
+                  <Hotspot label="Front" position={[0, 0.09, 0.73]} onClick={() => onViewChange?.('front')} />
+                </>
+              )}
+
+              {(currentView === 'left' || currentView === 'right' || currentView === 'top') && (
+                <>
+                  <Hotspot label="Front" position={[0, 0.09, 0.64]} onClick={() => onViewChange?.('front')} />
+                  <Hotspot label="Rear" position={[0, 0.18, -0.73]} onClick={() => onViewChange?.('back')} />
+                </>
+              )}
+            </group>
+          )}
+        </group>
       </group>
     </Center>
   );
