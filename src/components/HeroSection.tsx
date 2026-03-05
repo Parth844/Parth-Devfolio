@@ -168,52 +168,52 @@ function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0
   });
 
   return (
-    <Center>
-      <group ref={groupRef} scale={scrollScale}>
-        {/* Wrap everything in a responsive scale group so points stay attached on mobile */}
-        <group scale={scale}>
+    <group ref={groupRef} scale={scrollScale}>
+      {/* Wrap everything in a responsive scale group so points stay attached on mobile */}
+      <group scale={scale}>
+        <Center>
           <primitive object={scene} rotation={[0, 0, 0]} {...props} />
+        </Center>
 
-          <group position={[0, 0.04, -0.33]}>
-            <Sparkles count={200} scale={[0.1, 0.1, 0.4]} size={1.5} speed={4} color="#ff3300" opacity={1} />
-            <pointLight intensity={30} distance={1} color="#ff3300" />
-          </group>
-
-          {lasers.map(laser => (
-            <LaserBeam key={laser.id} direction={laser.dir} onComplete={() => setLasers(prev => prev.filter(l => l.id !== laser.id))} />
-          ))}
-
-          {/* Dynamic View Hotspots (Normalized coordinates) */}
-          {isFixed && (
-            <group>
-              {currentView === 'front' && (
-                <>
-                  <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
-                  <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
-                  <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
-                </>
-              )}
-
-              {currentView === 'back' && (
-                <>
-                  <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
-                  <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
-                  <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
-                  <Hotspot label="Front" position={[0, 0.09, 0.73]} onClick={() => onViewChange?.('front')} />
-                </>
-              )}
-
-              {(currentView === 'left' || currentView === 'right' || currentView === 'top') && (
-                <>
-                  <Hotspot label="Front" position={[0, 0.09, 0.64]} onClick={() => onViewChange?.('front')} />
-                  <Hotspot label="Rear" position={[0, 0.18, -0.73]} onClick={() => onViewChange?.('back')} />
-                </>
-              )}
-            </group>
-          )}
+        <group position={[0, 0.04, -0.33]}>
+          <Sparkles count={200} scale={[0.1, 0.1, 0.4]} size={1.5} speed={4} color="#ff3300" opacity={1} />
+          <pointLight intensity={30} distance={1} color="#ff3300" />
         </group>
+
+        {lasers.map(laser => (
+          <LaserBeam key={laser.id} direction={laser.dir} onComplete={() => setLasers(prev => prev.filter(l => l.id !== laser.id))} />
+        ))}
+
+        {/* Dynamic View Hotspots (Normalized coordinates) */}
+        {isFixed && (
+          <group>
+            {currentView === 'front' && (
+              <>
+                <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
+                <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
+              </>
+            )}
+
+            {currentView === 'back' && (
+              <>
+                <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
+                <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
+                <Hotspot label="Front" position={[0, 0.09, 0.73]} onClick={() => onViewChange?.('front')} />
+              </>
+            )}
+
+            {(currentView === 'left' || currentView === 'right' || currentView === 'top') && (
+              <>
+                <Hotspot label="Front" position={[0, 0.09, 0.64]} onClick={() => onViewChange?.('front')} />
+                <Hotspot label="Rear" position={[0, 0.18, -0.73]} onClick={() => onViewChange?.('back')} />
+              </>
+            )}
+          </group>
+        )}
       </group>
-    </Center>
+    </group>
   );
 }
 
@@ -283,15 +283,22 @@ const HeroSection = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const [isModelFixed, setIsModelFixed] = useState(false);
   const [modelScaleProgress, setModelScaleProgress] = useState(0);
   const [activeView, setActiveView] = useState<'front' | 'back' | 'left' | 'right' | 'top'>('front');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const viewRotations: Record<string, [number, number, number]> = {
-    front: [0, 0, 0],
+    front: [0.2, 0, 0], // Slight tilt downwards
     back: [0, Math.PI, 0],
     left: [0, -Math.PI / 2, 0],
     right: [0, Math.PI / 2, 0],
@@ -307,7 +314,7 @@ const HeroSection = () => {
       { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.5, ease: "power3.out" }
     )
       // Sequence 2: Reveal rest of Hero UI
-      .fromTo(lineRef.current, { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" }, "-=0.5")
+      .fromTo(".hero-line", { scaleX: 0 }, { scaleX: 1, duration: 1.5, transformOrigin: "left center" }, "-=0.5")
       .fromTo(".hero-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8 }, "-=1.0")
       .fromTo(".hero-role", { opacity: 0 }, { opacity: 1, duration: 1 }, "-=0.8")
       .fromTo(buttonsRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6");
@@ -317,8 +324,9 @@ const HeroSection = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=250%",
-          scrub: 1.5,
+          end: "+=400%", // Increased scroll distance to slow down the progress
+          scrub: 2.5,    // Smoother and slower follow speed
+
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
@@ -395,13 +403,16 @@ const HeroSection = () => {
       <div className="middle-3d-model absolute inset-0 z-0 pointer-events-auto flex items-center justify-center overflow-hidden transition-opacity duration-500" style={{ opacity: modelScaleProgress > 0.01 ? 1 : 0 }}>
         <Canvas dpr={[1, 2]} camera={{ fov: 45, position: [0, 0, 15] }} className="w-full h-full">
           <color attach="background" args={['#000000']} />
-          <ambientLight intensity={1.5} />
-          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} />
-          <pointLight position={[-10, -10, -10]} intensity={1} />
+          <ambientLight intensity={1.5 + (modelScaleProgress * 2)} />
+          <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} intensity={2 + (modelScaleProgress * 10)} color="#ffffff" />
+          <spotLight position={[0, 5, 5]} angle={0.3} penumbra={0.8} intensity={modelScaleProgress * 15} color="#00f3ff" />
+          <pointLight position={[-10, -10, -10]} intensity={1 + (modelScaleProgress * 3)} />
           <Stars radius={100} depth={50} count={Math.floor(modelScaleProgress * 5000)} factor={4} saturation={0} fade speed={1} />
-          <HeroStarStreaks progress={modelScaleProgress} />
+          <group position={[0, isMobile ? 1.8 : 0, 0]}>
+            <HeroStarStreaks progress={modelScaleProgress} />
+          </group>
           <PresentationControls global cursor={false} speed={4} config={{ mass: 1, tension: 1000 }} snap={{ mass: 2, tension: 1500 }} rotation={[0, 0, 0]} polar={[-Math.PI / 2, Math.PI / 2]} azimuth={[-Math.PI, Math.PI]}>
-            <group position={[0, 0, 0]}>
+            <group position={[0, isMobile ? 1.8 : 0, 0]}>
               <StarfighterModel isFixed={isModelFixed} scrollScale={modelScaleProgress} targetBaseRotation={viewRotations[activeView]} currentView={activeView} onViewChange={setActiveView} />
             </group>
           </PresentationControls>
@@ -409,22 +420,29 @@ const HeroSection = () => {
       </div>
 
       <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end pointer-events-none">
-        <div className="md:col-span-3 pb-8 hero-tag">
-          <div ref={lineRef} className="h-[2px] w-12 bg-primary mb-6" />
+        <div className="md:col-span-3 pb-8 hero-tag hidden md:block">
+          <div className="hero-line h-[2px] w-12 bg-primary mb-6" />
           <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
-          <p className="text-foreground text-sm font-semibold">Parth Tyagi</p>
+          <p className="text-foreground text-xl md:text-2xl font-semibold">Parth Tyagi</p>
         </div>
-        <div className="md:col-span-9 relative border-border min-h-[350px] md:min-h-[400px] flex flex-col justify-center md:justify-end">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-t border-border pt-8 relative z-10">
-            <div className="hero-role mb-6 md:mb-0">
-              <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide">
-                <span className="text-foreground font-medium">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
+        <div className="md:col-span-9 relative border-border min-h-0 md:min-h-[400px] flex flex-col justify-end">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 border-t border-border pt-6 md:pt-8 relative z-10">
+            <div className="hero-role mb-6 md:mb-0 flex flex-col items-center md:items-start text-center md:text-left w-full md:w-auto">
+              <div className="hero-tag md:hidden mb-4 flex flex-col items-center">
+                <div className="hero-line h-[2px] w-12 bg-primary mb-4" />
+                <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
+                <p className="text-foreground text-xl font-semibold">Parth Tyagi</p>
+              </div>
+              <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide flex items-center justify-center md:justify-start">
+                <span className="text-foreground font-medium mr-2">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
               </p>
             </div>
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
-              <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
-              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
-              <a href="mailto:Parthtyagi520@gmail.com" className="px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full md:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
+              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
+                <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
+              </div>
             </div>
           </div>
         </div>
