@@ -197,8 +197,9 @@ function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0
 
             {currentView === 'back' && (
               <>
-                <Hotspot label="Left" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
-                <Hotspot label="Right" position={[0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                {/* From the rear, the ship's Left side is on our right and Right is on our left */}
+                <Hotspot label="Right" position={[-0.64, 0, 0]} onClick={() => onViewChange?.('right')} />
+                <Hotspot label="Left" position={[0.64, 0, 0]} onClick={() => onViewChange?.('left')} />
                 <Hotspot label="Top" position={[0, 0.33, 0]} onClick={() => onViewChange?.('top')} />
                 <Hotspot label="Front" position={[0, 0.09, 0.73]} onClick={() => onViewChange?.('front')} />
               </>
@@ -302,8 +303,8 @@ const HeroSection = () => {
   const viewRotations: Record<string, [number, number, number]> = {
     front: [0.2, 0, 0], // Slight tilt downwards
     back: [0, Math.PI, 0],
-    left: [0, Math.PI / 2, 0],
-    right: [0, -Math.PI / 2, 0],
+    left: [0, -Math.PI / 2, 0],
+    right: [0, Math.PI / 2, 0],
     top: [Math.PI / 2, 0, 0],
   };
 
