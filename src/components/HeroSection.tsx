@@ -390,7 +390,7 @@ const HeroSection = () => {
       {/* Main Intro Text Overlay */}
       <div
         ref={introRef}
-        className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4 text-center opacity-0"
+        className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-[12vh] md:justify-center md:pt-0 pointer-events-none px-4 text-center opacity-0"
       >
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
           Turning Ideas into <span className="text-primary italic">Intelligent</span> Products
