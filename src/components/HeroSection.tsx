@@ -265,7 +265,7 @@ const HeroStarStreaks = ({ progress }: { progress: number }) => {
   });
 
   return (
-    <group position={[0, 2, 0]}>
+    <group position={[0, 4, 0]}>
       <lineSegments ref={meshRef}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={lines.length / 3} array={lines} itemSize={3} />
