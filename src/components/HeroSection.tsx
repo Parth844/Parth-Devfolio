@@ -317,14 +317,14 @@ const HeroSection = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=500%",
+          end: "+=250%",
           scrub: 1.5,
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
           onUpdate: (self) => {
             const scaleStart = 0.05;
-            const scaleEnd = 0.30;
+            const scaleEnd = 0.85;
             const progress = self.progress;
             const clampedProgress = gsap.utils.clamp(scaleStart, scaleEnd, progress);
             const newScale = gsap.utils.mapRange(scaleStart, scaleEnd, 0, 1, clampedProgress);
