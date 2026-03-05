@@ -302,8 +302,8 @@ const HeroSection = () => {
   const viewRotations: Record<string, [number, number, number]> = {
     front: [0.2, 0, 0], // Slight tilt downwards
     back: [0, Math.PI, 0],
-    left: [0, -Math.PI / 2, 0],
-    right: [0, Math.PI / 2, 0],
+    left: [0, Math.PI / 2, 0],
+    right: [0, -Math.PI / 2, 0],
     top: [Math.PI / 2, 0, 0],
   };
 
