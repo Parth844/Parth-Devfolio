@@ -265,13 +265,15 @@ const HeroStarStreaks = ({ progress }: { progress: number }) => {
   });
 
   return (
-    <lineSegments ref={meshRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={lines.length / 3} array={lines} itemSize={3} />
-        <bufferAttribute attach="attributes-color" count={colors.length / 3} array={colors} itemSize={3} />
-      </bufferGeometry>
-      <lineBasicMaterial vertexColors transparent opacity={Math.min(0.3, progress) * (1 - Math.pow(progress, 15))} blending={THREE.AdditiveBlending} />
-    </lineSegments>
+    <group position={[0, 2, 0]}>
+      <lineSegments ref={meshRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" count={lines.length / 3} array={lines} itemSize={3} />
+          <bufferAttribute attach="attributes-color" count={colors.length / 3} array={colors} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial vertexColors transparent opacity={Math.min(0.3, progress) * (1 - Math.pow(progress, 15))} blending={THREE.AdditiveBlending} />
+      </lineSegments>
+    </group>
   );
 };
 
@@ -408,11 +410,11 @@ const HeroSection = () => {
           <spotLight position={[0, 5, 5]} angle={0.3} penumbra={0.8} intensity={modelScaleProgress * 15} color="#00f3ff" />
           <pointLight position={[-10, -10, -10]} intensity={1 + (modelScaleProgress * 3)} />
           <Stars radius={100} depth={50} count={Math.floor(modelScaleProgress * 5000)} factor={4} saturation={0} fade speed={1} />
-          <group position={[0, isMobile ? 3.0 : 1.5, 0]}>
+          <group position={[0, isMobile ? 1.8 : 0, 0]}>
             <HeroStarStreaks progress={modelScaleProgress} />
           </group>
           <PresentationControls global cursor={false} speed={4} config={{ mass: 1, tension: 1000 }} snap={{ mass: 2, tension: 1500 }} rotation={[0, 0, 0]} polar={[-Math.PI / 2, Math.PI / 2]} azimuth={[-Math.PI, Math.PI]}>
-            <group position={[0, isMobile ? 3.0 : 1.5, 0]}>
+            <group position={[0, isMobile ? 1.8 : 0, 0]}>
               <StarfighterModel isFixed={isModelFixed} scrollScale={modelScaleProgress} targetBaseRotation={viewRotations[activeView]} currentView={activeView} onViewChange={setActiveView} />
             </group>
           </PresentationControls>
