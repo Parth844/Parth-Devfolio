@@ -34,7 +34,6 @@ Ensure you have Node.js installed on your machine.
 
 1. **Clone the repository:**
    ```bash
-   git clone <YOUR_GIT_URL>
    cd Parth-devfolio
    ```
 
