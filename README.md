@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# Parth Tyagi — Portfolio
 
-## Project info
+Welcome to the personal portfolio of **Parth Tyagi** — UI/UX Designer, AI Explorer, and Tech Innovator.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This repository contains the source code for my interactive, 3D-enhanced portfolio website.
 
-## How can I edit this code?
+## 🚀 Features
 
-There are several ways of editing your application.
+- **Immersive 3D Experience**: Integrated with Three.js and React Three Fiber to display an interactive 3D spaceship model and hyperloop animations.
+- **Smooth Scrolling & Animations**: Built using Lenis, GSAP, and Framer Motion for a fluid, dynamic user experience.
+- **Custom Cursor & Interactions**: A unique hollow ring cursor and interactive UI elements.
+- **Live Spotify Integration**: Displays live listening statistics directly from my Spotify account.
+- **Modern Tech Stack**: Developed with React, Vite, TypeScript, and styled with Tailwind CSS and shadcn/ui.
+- **Fully Responsive**: Optimized for desktop, tablet, and mobile viewing, maintaining aesthetics and functionality across devices.
 
-**Use Lovable**
+## 🛠️ Technologies Used
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Framework**: React.js with Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS & shadcn/ui
+- **Animations**: GSAP, Framer Motion
+- **3D Graphics**: Three.js, React Three Fiber, Drei
+- **Scroll Handling**: Lenis
+- **Routing**: React Router
+- **State Management / Data Fetching**: TanStack Query (React Query)
 
-Changes made via Lovable will be committed automatically to this repo.
+## 💻 Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Ensure you have Node.js installed on your machine.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. **Clone the repository:**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd Parth-devfolio
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Set up environment variables (if required):**
+   Create a `.env` file in the root directory and add any necessary environment variables (e.g., for Spotify backend integration).
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+5. Open [http://localhost:8080](http://localhost:8080) (or whichever port Vite uses) in your browser to view the portfolio.
+
+## 📦 Building for Production
+
+To create an optimized production build, run:
+```bash
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+To preview the production build locally:
+```bash
+npm run preview
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📬 Contact
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+For any inquiries or to connect with me, feel free to reach out via my portfolio contact section!
