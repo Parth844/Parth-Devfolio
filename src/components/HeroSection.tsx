@@ -38,7 +38,7 @@ const TitleSparkles = () => (
   </div>
 );
 
-const roles = ["AI/ML Developer", "UI/UX Designer", "Software Developer", "AR/VR Explorer"];
+const roles = ["AI/ML Developer", "Computer Vision Engineer", "AR/VR Developer", "Software Engineer"];
 
 // Individual Laser Beam Component
 const LaserBeam = ({ direction, onComplete }: { direction: THREE.Vector3, onComplete: () => void }) => {
@@ -368,6 +368,11 @@ const HeroSection = () => {
   }, { scope: sectionRef });
 
   useEffect(() => {
+    if (isModelFixed) {
+      setText("AI/ML Developer");
+      return;
+    }
+
     const current = roles[roleIndex];
     const timeout = setTimeout(() => {
       if (!isDeleting) {
@@ -382,7 +387,7 @@ const HeroSection = () => {
       }
     }, isDeleting ? 40 : 80);
     return () => clearTimeout(timeout);
-  }, [text, isDeleting, roleIndex]);
+  }, [text, isDeleting, roleIndex, isModelFixed]);
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-end px-6 md:px-12 lg:px-20 xl:px-32 pb-2 md:pb-4 overflow-hidden bg-background border-b border-border z-20">
@@ -422,30 +427,33 @@ const HeroSection = () => {
         </Canvas>
       </div>
 
-      <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end pointer-events-none">
-        <div className="md:col-span-3 pb-8 hero-tag hidden md:block">
-          <div className="hero-line h-[2px] w-12 bg-primary mb-6" />
-          <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
-          <p className="text-foreground text-xl md:text-2xl font-semibold">Parth Tyagi</p>
-        </div>
-        <div className="md:col-span-9 relative border-border min-h-0 md:min-h-[400px] flex flex-col justify-end">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 border-t border-border pt-6 md:pt-8 relative z-10">
-            <div className="hero-role mb-6 md:mb-0 flex flex-col items-center md:items-start text-center md:text-left w-full md:w-auto">
+      <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto pointer-events-none">
+        <div className="border-t border-border pt-6 md:pt-8 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 min-h-[140px] md:min-h-0">
+          <div className="flex flex-col md:flex-row md:items-end md:gap-24">
+            {/* Desktop/Tablet Name Section */}
+            <div className="hero-tag hidden md:block">
+              <div className="hero-line h-[2px] w-12 bg-primary mb-6" />
+              <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
+              <p className="text-foreground text-xl md:text-2xl font-bold">Parth Tyagi</p>
+            </div>
+
+            <div className="hero-role flex flex-col items-center md:items-start text-center md:text-left w-full md:w-auto">
               <div className="hero-tag md:hidden mb-4 flex flex-col items-center">
                 <div className="hero-line h-[2px] w-12 bg-primary mb-4" />
                 <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
-                <p className="text-foreground text-xl font-semibold">Parth Tyagi</p>
+                <p className="text-foreground text-xl font-bold">Parth Tyagi</p>
               </div>
               <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide flex items-center justify-center md:justify-start">
                 <span className="text-foreground font-medium mr-2">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
               </p>
             </div>
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full md:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
-              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
-                <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
-              </div>
+          </div>
+
+          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full md:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
+              <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
             </div>
           </div>
         </div>

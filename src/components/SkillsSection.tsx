@@ -2,10 +2,11 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 const skillCategories = [
-  { title: "UI/UX Design", skills: ["Figma", "Adobe XD", "Photoshop", "Illustrator"], color: "from-primary to-primary/60" },
-  { title: "Programming", skills: ["Python", "Java", "C++", "JavaScript"], color: "from-accent to-accent/60" },
-  { title: "AI & Machine Learning", skills: ["TensorFlow", "Computer Vision", "NLP", "Data Science"], color: "from-primary to-accent" },
-  { title: "Game Dev & XR", skills: ["Unity", "AR/VR", "3D Modeling", "Computer Vision"], color: "from-primary/80 to-accent/80" },
+  { title: "UI/UX Design", skills: ["Figma", "Adobe Illustrator", "Prototyping", "Wireframing"], color: "from-primary to-primary/60" },
+  { title: "Programming", skills: ["Python", "C++", "C#", "JavaScript", "HTML/CSS", "SQL"], color: "from-accent to-accent/60" },
+  { title: "AI & Computer Vision", skills: ["OpenCV", "FastAPI", "Deep Learning", "Face Recognition","TensorFlow","PyTorch"], color: "from-primary to-accent" },
+  { title: "AR & 3D", skills: ["Unity", "ARCore", "ARKit", "Blender", "Spatial Computing"], color: "from-primary/80 to-accent/80" },
+  { title: "Tools & Frameworks", skills: ["Git", "GitHub", "Docker", "Linux", "Xcode"], color: "from-accent/80 to-primary/80" },
 ];
 
 const SkillsSection = () => {
