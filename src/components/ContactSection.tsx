@@ -38,7 +38,7 @@ const ContactSection = () => {
           className="text-center mb-16"
         >
           <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Contact</p>
-          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-2xl md:text-5xl font-bold mb-4">
             Let's Build <span className="gradient-text">Together</span>
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto">

@@ -4,7 +4,7 @@ import { useRef } from "react";
 const skillCategories = [
   { title: "UI/UX Design", skills: ["Figma", "Adobe Illustrator", "Prototyping", "Wireframing"], color: "from-primary to-primary/60" },
   { title: "Programming", skills: ["Python", "C++", "C#", "JavaScript", "HTML/CSS", "SQL"], color: "from-accent to-accent/60" },
-  { title: "AI & Computer Vision", skills: ["OpenCV", "FastAPI", "Deep Learning", "Face Recognition","TensorFlow","PyTorch"], color: "from-primary to-accent" },
+  { title: "AI & Computer Vision", skills: ["OpenCV", "FastAPI", "Deep Learning", "Face Recognition", "TensorFlow", "PyTorch"], color: "from-primary to-accent" },
   { title: "AR & 3D", skills: ["Unity", "ARCore", "ARKit", "Blender", "Spatial Computing"], color: "from-primary/80 to-accent/80" },
   { title: "Tools & Frameworks", skills: ["Git", "GitHub", "Docker", "Linux", "Xcode"], color: "from-accent/80 to-primary/80" },
 ];
@@ -33,7 +33,7 @@ const SkillsSection = () => {
           className="mb-16"
         >
           <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Skills</p>
-          <h2 className="font-display text-3xl md:text-5xl font-bold">
+          <h2 className="font-display text-2xl md:text-5xl font-bold">
             Tools & <span className="gradient-text">Technologies</span>
           </h2>
         </motion.div>
