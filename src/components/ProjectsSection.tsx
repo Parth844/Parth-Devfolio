@@ -134,7 +134,7 @@ const ProjectsSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section id="projects" className="border-b border-border bg-background relative" ref={containerRef}>
+    <section id="projects" className="border-b border-border bg-background relative overflow-hidden" ref={containerRef}>
       <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-12 relative">
 
         {/* Left Column - Pinned Title */}
@@ -151,7 +151,7 @@ const ProjectsSection = () => {
               <p className="text-primary font-medium tracking-widest uppercase text-xs mb-4">
                 Selected Work
               </p>
-              <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
+              <h2 className="font-display text-4xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
                 Built<br />
                 For<br />
                 <span className="text-primary">Scale</span>

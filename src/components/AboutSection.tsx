@@ -42,7 +42,7 @@ const AboutSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section id="about" className="border-b border-border bg-background relative z-10" ref={containerRef}>
+    <section id="about" className="border-b border-border bg-background relative z-10 overflow-hidden" ref={containerRef}>
       <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-2 relative">
 
         {/* Left Column - Pinned */}
@@ -64,7 +64,7 @@ const AboutSection = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <p className="text-primary font-medium tracking-widest uppercase text-xs mb-4">About Me</p>
-              <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter mb-8 text-foreground">
+              <h2 className="font-display text-4xl md:text-7xl font-bold uppercase leading-[0.9] tracking-tighter mb-8 text-foreground">
                 Creative<br />
                 <span className="text-primary">Engineering</span>
               </h2>

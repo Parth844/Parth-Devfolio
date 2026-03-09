@@ -65,7 +65,7 @@ const ExperienceSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section id="experience" className="border-b border-border bg-background relative" ref={containerRef}>
+    <section id="experience" className="border-b border-border bg-background relative overflow-hidden" ref={containerRef}>
       <div className="max-w-[90rem] mx-auto border-x border-border grid grid-cols-1 md:grid-cols-12 relative">
 
         {/* Left Column - Pinned */}
@@ -80,7 +80,7 @@ const ExperienceSection = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <p className="text-primary font-medium tracking-widest uppercase text-xs mb-4">Experience</p>
-              <h2 className="font-display text-4xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
+              <h2 className="font-display text-3xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold uppercase leading-[0.9] tracking-tighter text-foreground">
                 Achievements<br />
                 &<br />
                 <span className="text-primary">Milestones</span>
