@@ -11,7 +11,7 @@ import * as THREE from "three";
 gsap.registerPlugin(ScrollTrigger);
 
 const TitleSparkles = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-visible">
+  <div className="absolute inset-0 pointer-events-none overflow-hidden">
     {[...Array(12)].map((_, i) => (
       <motion.div
         key={i}
@@ -390,7 +390,7 @@ const HeroSection = () => {
   }, [text, isDeleting, roleIndex, isModelFixed]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-end px-6 md:px-12 lg:px-20 xl:px-32 pb-2 md:pb-4 overflow-hidden bg-background border-b border-border z-20">
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col justify-end px-4 sm:px-6 lg:px-20 xl:px-32 pb-4 overflow-hidden bg-background border-b border-border z-20 w-full max-w-full">
       <div className="absolute inset-x-0 top-0 h-px bg-border/40" />
       <div className="absolute inset-y-0 left-[10%] w-px bg-border/20 hidden md:block" />
       <div className="absolute inset-y-0 right-[10%] w-px bg-border/20 hidden md:block" />
@@ -400,10 +400,10 @@ const HeroSection = () => {
         ref={introRef}
         className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-[12vh] md:justify-center md:pt-0 pointer-events-none px-4 text-center opacity-0"
       >
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
           Turning Ideas into <span className="text-primary italic">Intelligent</span> Products
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground font-light tracking-[0.3em] uppercase max-w-2xl">
+        <p className="text-base md:text-xl text-muted-foreground font-light tracking-[0.3em] uppercase max-w-2xl px-4">
           AI, design, and technology working together.
         </p>
       </div>
@@ -428,32 +428,32 @@ const HeroSection = () => {
       </div>
 
       <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto pointer-events-none">
-        <div className="border-t border-border pt-6 md:pt-8 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 min-h-[140px] md:min-h-0">
-          <div className="flex flex-col md:flex-row md:items-end md:gap-24">
+        <div className="border-t border-border pt-6 lg:pt-8 relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:gap-8 min-h-[140px] lg:min-h-0">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:gap-24">
             {/* Desktop/Tablet Name Section */}
-            <div className="hero-tag hidden md:block">
+            <div className="hero-tag hidden lg:block">
               <div className="hero-line h-[2px] w-12 bg-primary mb-6" />
               <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
               <p className="text-foreground text-xl md:text-2xl font-bold">Parth Tyagi</p>
             </div>
 
-            <div className="hero-role flex flex-col items-center md:items-start text-center md:text-left w-full md:w-auto">
-              <div className="hero-tag md:hidden mb-4 flex flex-col items-center">
+            <div className="hero-role flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto">
+              <div className="hero-tag lg:hidden mb-4 flex flex-col items-center">
                 <div className="hero-line h-[2px] w-12 bg-primary mb-4" />
                 <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs mb-2">Portfolio v3.0</p>
                 <p className="text-foreground text-xl font-bold">Parth Tyagi</p>
               </div>
-              <p className="text-xl md:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide flex items-center justify-center md:justify-start">
+              <p className="text-xl lg:text-2xl text-muted-foreground h-8 font-sans font-light tracking-wide flex items-center justify-center lg:justify-start">
                 <span className="text-foreground font-medium mr-2">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
               </p>
             </div>
           </div>
 
-          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full md:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
-            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
-              <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 md:flex-none px-4 md:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
+          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+            <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full lg:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
+              <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
             </div>
           </div>
         </div>
