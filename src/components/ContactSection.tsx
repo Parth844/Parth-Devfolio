@@ -285,7 +285,7 @@ const ContactSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.7 + i * 0.1, duration: 0.4 }}
-              className="w-12 h-12 rounded-xl glass flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 hover:neon-glow transition-all duration-300"
+              className="w-12 h-12 rounded-xl glass flex items-center justify-center text-primary border-primary/30 neon-glow transition-all duration-300"
             >
               <social.icon size={20} />
             </motion.a>
