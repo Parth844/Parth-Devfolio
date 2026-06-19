@@ -89,7 +89,7 @@ const Footer = () => (
           <a
             href="/Parth_Tyagi_Resume.pdf"
             download
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground text-sm font-bold uppercase tracking-wider hover:bg-accent hover:shadow-[0_0_30px_hsl(18_66%_59%/0.3)] transition-all duration-300 w-fit"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground text-sm font-bold uppercase tracking-wider hover:brightness-110 hover:shadow-[0_0_30px_hsl(151_55%_52%/0.3)] transition-all duration-300 w-fit"
           >
             Download Resume
           </a>

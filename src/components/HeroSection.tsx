@@ -19,7 +19,7 @@ const TitleSparkles = () => (
         style={{
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
-          boxShadow: '0 0 10px 1px hsl(18 66% 59% / 0.8)',
+          boxShadow: '0 0 10px 1px rgba(0, 255, 128, 0.8)',
         }}
         animate={{
           opacity: [0, 1, 0],
@@ -495,7 +495,7 @@ const HeroSection = () => {
           <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
             <button
               onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-              className="magnetic-btn h-fit w-full lg:w-auto px-8 py-4 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-accent hover:shadow-[0_0_30px_hsl(18_66%_59%/0.4)] transition-all duration-300 pointer-events-auto rounded-sm"
+              className="magnetic-btn h-fit w-full lg:w-auto px-8 py-4 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:brightness-110 hover:shadow-[0_0_30px_hsl(151_55%_52%/0.4)] transition-all duration-300 pointer-events-auto rounded-sm"
             >
               View Projects
             </button>

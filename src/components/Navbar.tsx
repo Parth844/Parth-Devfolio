@@ -118,7 +118,7 @@ const Navbar = () => {
         {/* Quick Contact Button */}
         <button
           onClick={() => scrollTo("Contact")}
-          className="magnetic-btn hidden md:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary text-primary-foreground hover:bg-accent hover:shadow-[0_0_20px_hsl(18_66%_59%/0.4)] transition-all duration-300 text-xs font-bold uppercase tracking-wider"
+          className="magnetic-btn hidden md:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(151_55%_52%/0.4)] transition-all duration-300 text-xs font-bold uppercase tracking-wider"
         >
           <Send size={12} /> Let's Talk
         </button>

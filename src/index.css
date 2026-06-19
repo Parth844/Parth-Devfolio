@@ -6,53 +6,53 @@
 
 @layer base {
   :root {
-    /* Claude Design — warm coral on deep black */
+    /* Shopify Editions inspired Stark Black & White with vibrant accents */
     --background: 0 0% 2%;
-    --foreground: 28 30% 94%;
+    --foreground: 0 0% 100%;
 
-    --card: 20 10% 5%;
-    --card-foreground: 28 30% 94%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 20 10% 5%;
-    --popover-foreground: 28 30% 94%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 18 66% 59%;
-    /* Claude Coral #DA7756 */
+    --primary: 151 55% 52%;
+    /* Shopify Green */
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 20 8% 10%;
-    --secondary-foreground: 28 30% 94%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 20 8% 16%;
-    --muted-foreground: 25 12% 60%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 32 80% 68%;
-    /* Warm amber accent */
-    --accent-foreground: 0 0% 0%;
+    --accent: 217 91% 60%;
+    /* Vibrant Blue accent */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 20 10% 14%;
-    --input: 20 10% 14%;
-    --ring: 18 66% 59%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 151 55% 52%;
 
     --radius: 0.5rem;
 
-    --neon-glow: 18 66% 59%;
-    --neon-purple: 32 80% 68%;
+    --neon-glow: 151 55% 52%;
+    --neon-purple: 217 91% 60%;
 
-    --glass: 20 10% 5%;
-    --glass-border: 20 10% 18%;
+    --glass: 0 0% 4%;
+    --glass-border: 0 0% 20%;
 
-    --sidebar-background: 20 10% 5%;
-    --sidebar-foreground: 28 30% 94%;
-    --sidebar-primary: 18 66% 59%;
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 151 55% 52%;
     --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 20 8% 10%;
-    --sidebar-accent-foreground: 28 30% 94%;
-    --sidebar-border: 20 10% 14%;
-    --sidebar-ring: 18 66% 59%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 151 55% 52%;
   }
 }
 

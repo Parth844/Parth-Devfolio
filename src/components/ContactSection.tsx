@@ -254,7 +254,7 @@ const ContactSection = () => {
             disabled={sending}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="magnetic-btn w-full md:w-auto px-10 py-4 font-bold text-sm uppercase tracking-widest text-primary-foreground bg-primary hover:bg-accent hover:shadow-[0_0_40px_hsl(18_66%_59%/0.4)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="magnetic-btn w-full md:w-auto px-10 py-4 font-bold text-sm uppercase tracking-widest text-primary-foreground bg-primary hover:brightness-110 hover:shadow-[0_0_40px_hsl(151_55%_52%/0.4)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {sending ? (
               <span className="animate-pulse">Sending...</span>
