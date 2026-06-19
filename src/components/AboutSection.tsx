@@ -1,13 +1,14 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, lazy, Suspense } from "react";
 import { Sparkles, Brain, Palette, Code } from "lucide-react";
-import { Canvas } from "@react-three/fiber";
-import InteractiveModel from "./ui/InteractiveModel";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Deferred so the background WebGL canvas only loads/mounts as the section approaches.
+const AboutModel = lazy(() => import("./AboutModel"));
 
 const timeline = [
   { year: "2023", title: "B.Tech Computer Science", desc: "Started degree at ABES Institute of Technology." },
@@ -23,6 +24,10 @@ const AboutSection = () => {
 
   const inViewRef = useRef(null);
   const inView = useInView(inViewRef, { once: true, margin: "-100px" });
+
+  // Mount the 3D background only once the section gets within 300px of the viewport.
+  const modelWrapRef = useRef(null);
+  const modelInView = useInView(modelWrapRef, { once: true, margin: "300px" });
 
   useGSAP(() => {
     // Only apply pinning on larger screens to avoid mobile jank
@@ -51,10 +56,12 @@ const AboutSection = () => {
           className="md:col-span-1 p-8 md:p-16 border-b md:border-b-0 md:border-r border-border h-fit md:h-screen flex flex-col justify-center relative overflow-hidden"
         >
           {/* Subtle 3D background integrated into the pinned section */}
-          <div className="absolute inset-0 opacity-30 pointer-events-none z-0">
-            <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-              <InteractiveModel color="hsl(151, 55%, 52%)" distort={0.4} speed={1} />
-            </Canvas>
+          <div ref={modelWrapRef} className="absolute inset-0 opacity-30 pointer-events-none z-0">
+            {modelInView && (
+              <Suspense fallback={null}>
+                <AboutModel />
+              </Suspense>
+            )}
           </div>
 
           <div className="relative z-10" ref={inViewRef}>

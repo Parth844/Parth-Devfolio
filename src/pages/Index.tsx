@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
-import ParticleBackground from "@/components/ParticleBackground";
 import ScrollProgress from "@/components/ScrollProgress";
 import CursorGlow from "@/components/CursorGlow";
 import Navbar from "@/components/Navbar";
@@ -14,6 +13,9 @@ import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import LoadingScreen from "@/components/LoadingScreen";
 
+// Background decoration only — deferred so its WebGL canvas mounts after first paint.
+const ParticleBackground = lazy(() => import("@/components/ParticleBackground"));
+
 const Index = () => {
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +28,9 @@ const Index = () => {
       {!loading && (
         <SmoothScroll>
           <div className="min-h-screen bg-background text-foreground">
-            <ParticleBackground />
+            <Suspense fallback={null}>
+              <ParticleBackground />
+            </Suspense>
             <ScrollProgress />
             <CursorGlow />
             <Navbar />

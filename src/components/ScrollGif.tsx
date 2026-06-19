@@ -3,14 +3,14 @@ import React, { useEffect, useState, useRef } from 'react';
 const ScrollGif = () => {
     const [scrollProgress, setScrollProgress] = useState(0);
     const [isScrollingUp, setIsScrollingUp] = useState(false);
-    const [lastScrollY, setLastScrollY] = useState(0);
     const [isScrolling, setIsScrolling] = useState(false);
 
-    // Mouse tracking state for the eye
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-    const containerRef = useRef<HTMLDivElement>(null);
+    // Eye offset (the only mouse-derived value we render). lastScrollY is internal
+    // bookkeeping, so it lives in a ref — keeping it out of state is what lets the
+    // scroll listener mount exactly once instead of re-attaching on every scroll event.
     const [eyeOffset, setEyeOffset] = useState({ x: 0, y: 0 });
-
+    const containerRef = useRef<HTMLDivElement>(null);
+    const lastScrollYRef = useRef(0);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -29,17 +29,15 @@ const ScrollGif = () => {
 
             const maxScroll = documentHeight - windowHeight;
             const progress = maxScroll > 0 ? currentScrollY / maxScroll : 0;
+            setScrollProgress(Math.min(Math.max(progress, 0), 1));
 
-            const safeProgress = Math.min(Math.max(progress, 0), 1);
-            setScrollProgress(safeProgress);
-
-            if (currentScrollY < lastScrollY - 2) {
+            const last = lastScrollYRef.current;
+            if (currentScrollY < last - 2) {
                 setIsScrollingUp(true);
-            } else if (currentScrollY > lastScrollY + 2) {
+            } else if (currentScrollY > last + 2) {
                 setIsScrollingUp(false);
             }
-
-            setLastScrollY(currentScrollY);
+            lastScrollYRef.current = currentScrollY;
 
             setIsScrolling(true);
             if (timeoutRef.current) {
@@ -62,51 +60,51 @@ const ScrollGif = () => {
                 clearTimeout(timeoutRef.current);
             }
         };
-    }, [lastScrollY]);
-
-    // Handle global mouse movement for the eye
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            setMousePos({ x: e.clientX, y: e.clientY });
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
-    // Calculate eye position relative to container
+    // Eye tracking: follow the pointer with a tiny offset. rAF-throttled, and computing
+    // the offset inline means one state update per frame instead of two setStates on
+    // every single mousemove event.
     useEffect(() => {
-        if (!containerRef.current) return;
+        let frame = 0;
+        let mx = 0;
+        let my = 0;
 
-        const rect = containerRef.current.getBoundingClientRect();
+        const compute = () => {
+            frame = 0;
+            const el = containerRef.current;
+            if (!el) return;
 
-        // The black circle is roughly on the left side of the character's head.
-        // We define the "center" of that eye relative to the bounding box.
-        // Based on the image, the eye is approximately at:
-        // X: ~25% from the left
-        // Y: ~50% from the top
-        const eyeCenterX = rect.left + (rect.width * 0.25);
-        const eyeCenterY = rect.top + (rect.height * 0.50);
+            const rect = el.getBoundingClientRect();
+            // Eye sits ~25% from the left, ~50% down inside the character's head.
+            const eyeCenterX = rect.left + rect.width * 0.25;
+            const eyeCenterY = rect.top + rect.height * 0.5;
 
-        const deltaX = mousePos.x - eyeCenterX;
-        const deltaY = mousePos.y - eyeCenterY;
+            const deltaX = mx - eyeCenterX;
+            const deltaY = my - eyeCenterY;
+            const maxOffset = 0.8; // px
+            const distance = Math.hypot(deltaX, deltaY);
 
-        // Constrain the movement to a maximum radius
-        const maxOffset = 0.8; // px
+            if (distance > 0) {
+                const factor = Math.min(distance, maxOffset) / distance;
+                setEyeOffset({ x: deltaX * factor, y: deltaY * factor });
+            } else {
+                setEyeOffset({ x: 0, y: 0 });
+            }
+        };
 
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const handleMouseMove = (e: MouseEvent) => {
+            mx = e.clientX;
+            my = e.clientY;
+            if (!frame) frame = requestAnimationFrame(compute);
+        };
 
-        if (distance > 0) {
-            // Normalize and multiply by maxOffset, but keep it proportional to distance if very close
-            const factor = Math.min(distance, maxOffset) / distance;
-            setEyeOffset({
-                x: deltaX * factor,
-                y: deltaY * factor
-            });
-        } else {
-            setEyeOffset({ x: 0, y: 0 });
-        }
-    }, [mousePos]);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            if (frame) cancelAnimationFrame(frame);
+        };
+    }, []);
 
     const topPercentage = 10 + (scrollProgress * 80);
 
@@ -120,7 +118,6 @@ const ScrollGif = () => {
     }
 
     // The black circle position percentage inside the 724x1024 frame
-    // You might need to tweak these slightly to match exactly where the black circle is
     const eyeBaseLeft = '36%';
     const eyeBaseTop = '45%';
 
@@ -161,7 +158,6 @@ const ScrollGif = () => {
                     style={{
                         left: eyeBaseLeft,
                         top: eyeBaseTop,
-                        // Offset it based on mouse, but also translate(-50%, -50%) to center the dot on the coordinates
                         transform: `translate(calc(-50% + ${eyeOffset.x}px), calc(-50% + ${eyeOffset.y}px))`
                     }}
                 />

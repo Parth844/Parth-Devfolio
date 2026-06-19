@@ -104,9 +104,16 @@ const CustomCursor = () => {
                 setCombatMode(false);
             }
 
-            // Cleanup old lasers (older than 2 seconds)
+            // Cleanup expired lasers (older than 2s) WITHOUT forcing a re-render on
+            // every frame: return the same array reference when nothing actually
+            // expired so React bails out of the update. Previously this created a new
+            // array every frame → ~60 re-renders/sec even with zero lasers on screen.
             const currentTime = Date.now();
-            setLasers(prev => prev.filter(l => currentTime - l.createdAt < 2000));
+            setLasers(prev => {
+                if (prev.length === 0) return prev;
+                const next = prev.filter(l => currentTime - l.createdAt < 2000);
+                return next.length === prev.length ? prev : next;
+            });
 
             frameId = requestAnimationFrame(loop);
         };

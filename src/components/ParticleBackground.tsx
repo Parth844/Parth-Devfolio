@@ -51,9 +51,23 @@ const ParticleSystem = () => {
 };
 
 const ParticleBackground = () => {
+  // Skip the always-on WebGL loop for reduced-motion users.
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return null;
+  }
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0" style={{ background: "transparent" }}>
-      <Canvas camera={{ position: [0, 0, 5] }}>
+      {/* dpr cap avoids rendering 4x the pixels on retina/hi-dpi screens; antialias off
+          is fine for points and saves GPU. */}
+      <Canvas
+        camera={{ position: [0, 0, 5] }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, powerPreference: "high-performance" }}
+      >
         <ParticleSystem />
       </Canvas>
     </div>
