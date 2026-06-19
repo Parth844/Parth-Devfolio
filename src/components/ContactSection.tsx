@@ -164,18 +164,19 @@ const ContactSection = () => {
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="text-center mb-16"
         >
-          <p 
+          <p
             onClick={handleHeaderClick}
-            className="text-primary font-medium tracking-widest uppercase text-sm mb-3 cursor-pointer select-none active:scale-95 transition-transform"
+            className="text-primary font-medium tracking-widest uppercase text-sm mb-4 cursor-pointer select-none active:scale-95 transition-transform inline-flex items-center gap-2"
             title="Click 5 times to view submissions"
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Contact
           </p>
-          <h2 className="font-display text-2xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-3xl md:text-6xl lg:text-7xl font-black mb-6 leading-none tracking-tighter">
             Let's Build <span className="gradient-text">Together</span>
           </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto">
-            Have a project idea or just want to connect? I'd love to hear from you.
+          <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
+            Have a project idea or want to connect? I'm open to opportunities and collaboration.
           </p>
         </motion.div>
 
@@ -187,8 +188,11 @@ const ContactSection = () => {
           initial={{ opacity: 0, y: 40, scale: 0.97 }}
           animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="glass rounded-2xl p-8 md:p-10 space-y-6"
+          className="border border-border bg-card/50 backdrop-blur-sm p-8 md:p-10 space-y-6 relative overflow-hidden"
         >
+          {/* Subtle top gradient line */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
           {/* Netlify Form Hidden Inputs */}
           <input type="hidden" name="form-name" value="contact" />
           <div className="hidden">
@@ -201,14 +205,14 @@ const ContactSection = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <label className="text-sm text-muted-foreground mb-2 block">Name</label>
+              <label className="text-xs text-muted-foreground mb-2 block uppercase tracking-wider font-semibold">Name</label>
               <input
                 required
                 type="text"
                 name="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                className="w-full bg-background/50 border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/20 transition-all"
                 placeholder="Your name"
               />
             </motion.div>
@@ -217,14 +221,14 @@ const ContactSection = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <label className="text-sm text-muted-foreground mb-2 block">Email</label>
+              <label className="text-xs text-muted-foreground mb-2 block uppercase tracking-wider font-semibold">Email</label>
               <input
                 required
                 type="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all"
+                className="w-full bg-background/50 border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/20 transition-all"
                 placeholder="your@email.com"
               />
             </motion.div>
@@ -234,23 +238,23 @@ const ContactSection = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <label className="text-sm text-muted-foreground mb-2 block">Message</label>
+            <label className="text-xs text-muted-foreground mb-2 block uppercase tracking-wider font-semibold">Message</label>
             <textarea
               required
               rows={5}
               name="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
+              className="w-full bg-background/50 border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
               placeholder="Tell me about your project..."
             />
           </motion.div>
           <motion.button
             type="submit"
             disabled={sending}
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full md:w-auto px-8 py-3 rounded-lg font-medium text-primary-foreground bg-gradient-to-r from-primary to-accent hover:shadow-[0_0_30px_hsl(199,89%,48%,0.3)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="magnetic-btn w-full md:w-auto px-10 py-4 font-bold text-sm uppercase tracking-widest text-primary-foreground bg-primary hover:bg-accent hover:shadow-[0_0_40px_hsl(18_66%_59%/0.4)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {sending ? (
               <span className="animate-pulse">Sending...</span>
