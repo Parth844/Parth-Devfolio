@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowDown, Send, Download } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -36,6 +36,35 @@ const TitleSparkles = () => (
       />
     ))}
   </div>
+);
+
+const stats = [
+  { label: "Projects Built", value: "15+" },
+  { label: "Hackathons Won", value: "2" },
+  { label: "Technologies", value: "20+" },
+  { label: "Years Coding", value: "3+" },
+];
+
+const StatBar = () => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 2.2, duration: 0.8 }}
+    className="flex gap-8 md:gap-12"
+  >
+    {stats.map((s, i) => (
+      <motion.div
+        key={s.label}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.4 + i * 0.1, duration: 0.5 }}
+        className="flex flex-col"
+      >
+        <span className="text-2xl md:text-3xl font-black text-primary font-display">{s.value}</span>
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.label}</span>
+      </motion.div>
+    ))}
+  </motion.div>
 );
 
 const roles = ["AI/ML Developer", "Computer Vision Engineer", "AR/VR Developer", "Software Engineer"];
@@ -398,13 +427,22 @@ const HeroSection = () => {
       {/* Main Intro Text Overlay */}
       <div
         ref={introRef}
-        className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-[12vh] md:justify-center md:pt-0 pointer-events-none px-4 text-center opacity-0"
+        className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-[10vh] md:justify-center md:pt-0 pointer-events-none px-4 text-center opacity-0"
       >
-        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-          Turning Ideas into <span className="text-primary italic">Intelligent</span> Products
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 mb-6"
+        >
+          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">Available for work</span>
+        </motion.div>
+        <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 text-white drop-shadow-[0_0_60px_hsl(18_66%_59%/0.2)] leading-[0.9]">
+          Turning Ideas into<br />
+          <span className="text-primary italic" style={{ textShadow: "0 0 40px hsl(18 66% 59% / 0.4)" }}>Intelligent</span> Products
         </h1>
-        <p className="text-base md:text-xl text-muted-foreground font-light tracking-[0.3em] uppercase max-w-2xl px-4">
-          AI, design, and technology working together.
+        <p className="text-base md:text-lg text-muted-foreground font-light tracking-[0.25em] uppercase max-w-xl px-4">
+          AI · Design · Technology
         </p>
       </div>
 
@@ -429,7 +467,7 @@ const HeroSection = () => {
 
       <div ref={textRef} className="relative z-10 w-full max-w-[90rem] mx-auto pointer-events-none">
         <div className="border-t border-border pt-6 lg:pt-8 relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6 lg:gap-8 min-h-[140px] lg:min-h-0">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:gap-24">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:gap-16">
             {/* Desktop/Tablet Name Section */}
             <div className="hero-tag hidden lg:block">
               <div className="hero-line h-[2px] w-12 bg-primary mb-6" />
@@ -447,13 +485,23 @@ const HeroSection = () => {
                 <span className="text-foreground font-medium mr-2">Role:</span> {text}<span className="animate-pulse text-primary ml-1">|</span>
               </p>
             </div>
+
+            {/* Animated Stats */}
+            <div className="hidden lg:block pointer-events-auto">
+              <StatBar />
+            </div>
           </div>
 
-          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-            <button onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })} className="h-fit w-full lg:w-auto px-8 py-4 bg-primary text-black font-semibold text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300 pointer-events-auto">View Projects</button>
-            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Download size={16} /> Resume</a>
-              <a href="mailto:Parthtyagi520@gmail.com" className="flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto"><Send size={16} /> Contact</a>
+          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+            <button
+              onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+              className="magnetic-btn h-fit w-full lg:w-auto px-8 py-4 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:brightness-110 hover:shadow-[0_0_30px_hsl(151_55%_52%/0.4)] transition-all duration-300 pointer-events-auto rounded-sm"
+            >
+              View Projects
+            </button>
+            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <a href="/Parth_Tyagi_Resume.pdf" download="Parth_Tyagi_Resume.pdf" className="magnetic-btn flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto rounded-sm"><Download size={16} /> Resume</a>
+              <a href="mailto:Parthtyagi520@gmail.com" className="magnetic-btn flex-1 lg:flex-none px-4 lg:px-8 py-4 border border-border text-foreground font-medium text-sm hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer pointer-events-auto rounded-sm"><Send size={16} /> Contact</a>
             </div>
           </div>
         </div>

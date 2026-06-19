@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, lazy, Suspense } from "react";
 import { Sparkles, Brain, Palette, Code } from "lucide-react";
 import gsap from "gsap";
@@ -89,23 +89,31 @@ const AboutSection = () => {
           {/* Skills Grid - Bento Sub-grid */}
           <div className="grid grid-cols-2 border-b border-border">
             {[
-              { icon: Code, label: "Core Logic", desc: "Python, C++, JS" },
-              { icon: Brain, label: "AI/CV", desc: "OpenCV, Deep Learning" },
-              { icon: Sparkles, label: "AR & 3D", desc: "Unity, Blender, ARKit" },
-              { icon: Palette, label: "UI/UX", desc: "Figma, Prototyping" },
+              { icon: Code, label: "Core Logic", desc: "Python, C++, JS", accent: "from-primary/20 to-transparent" },
+              { icon: Brain, label: "AI/CV", desc: "OpenCV, Deep Learning", accent: "from-accent/20 to-transparent" },
+              { icon: Sparkles, label: "AR & 3D", desc: "Unity, Blender, ARKit", accent: "from-accent/15 to-transparent" },
+              { icon: Palette, label: "UI/UX", desc: "Figma, Prototyping", accent: "from-primary/15 to-transparent" },
             ].map((item, i) => (
-              <div
+              <motion.div
                 key={item.label}
-                className={`p-8 md:p-12 border-border hover:bg-card transition-colors duration-500 flex flex-col justify-center
-                  ${i % 2 === 0 ? "border-r" : ""} 
+                whileHover={{ backgroundColor: "hsl(20 10% 5%)" }}
+                className={`relative p-8 md:p-10 border-border transition-colors duration-500 flex flex-col justify-end overflow-hidden group
+                  ${i % 2 === 0 ? "border-r" : ""}
                   ${i < 2 ? "border-b" : ""}
                 `}
-                style={{ minHeight: "250px" }}
+                style={{ minHeight: "220px" }}
               >
-                <item.icon className="mb-6 text-primary" size={32} strokeWidth={1.5} />
-                <h3 className="font-display font-bold text-xl mb-2 text-foreground">{item.label}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
-              </div>
+                {/* Hover gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                {/* Large decorative icon */}
+                <item.icon className="absolute top-6 right-6 text-primary/10 group-hover:text-primary/20 transition-colors duration-500" size={64} strokeWidth={0.8} />
+
+                <div className="relative z-10">
+                  <item.icon className="mb-4 text-primary" size={24} strokeWidth={1.5} />
+                  <h3 className="font-display font-bold text-lg mb-1 text-foreground">{item.label}</h3>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">{item.desc}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
 

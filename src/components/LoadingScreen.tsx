@@ -125,29 +125,50 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                 </Canvas>
             </div>
 
-            <div className="relative z-10 text-center">
+            <div className="relative z-10 text-center px-8">
+                {/* Logo / Name */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                    className="mb-10"
+                >
+                    <p className="font-display font-black text-4xl md:text-5xl tracking-tighter text-white">
+                        PARTH <span className="text-primary">TYAGI</span>
+                    </p>
+                    <p className="text-xs tracking-[0.4em] uppercase text-white/30 mt-2">
+                        AI · Design · Technology
+                    </p>
+                </motion.div>
+
                 <motion.div
                     key={loadingText}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="mb-8"
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.4 }}
+                    className="mb-6"
                 >
-                    <h2 className="text-white font-display text-xs tracking-[0.4em] uppercase opacity-50 mb-2">
-                        System Online
-                    </h2>
-                    <p className="text-primary font-display text-xl font-bold tracking-widest uppercase">
+                    <p className="font-display text-sm font-semibold tracking-[0.3em] uppercase"
+                       style={{ color: "#DA7756" }}>
                         {loadingText}
                     </p>
                 </motion.div>
 
-                {/* Simplified Loading Bar */}
-                <div className="w-64 h-[2px] bg-white/10 relative overflow-hidden mx-auto">
+                {/* Loading Bar */}
+                <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden mx-auto">
                     <motion.div
                         className="absolute inset-0 bg-primary"
+                        style={{}}
                         initial={{ left: "-100%" }}
                         animate={{ left: "0%" }}
                         transition={{ duration: 7.5, ease: "easeIn" }}
+                    />
+                    {/* Shimmer */}
+                    <motion.div
+                        className="absolute top-0 bottom-0 w-16 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                        animate={{ left: ["-20%", "120%"] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.5 }}
                     />
                 </div>
             </div>

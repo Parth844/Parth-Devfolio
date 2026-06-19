@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
 import ScrollProgress from "@/components/ScrollProgress";
 import CursorGlow from "@/components/CursorGlow";
@@ -12,8 +12,8 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import LoadingScreen from "@/components/LoadingScreen";
+import MarqueeStrip from "@/components/MarqueeStrip";
 
-// Background decoration only — deferred so its WebGL canvas mounts after first paint.
 const ParticleBackground = lazy(() => import("@/components/ParticleBackground"));
 
 const Index = () => {
@@ -36,9 +36,12 @@ const Index = () => {
             <Navbar />
             <main>
               <HeroSection />
+              <MarqueeStrip />
               <AboutSection />
+              <MarqueeStrip reverse />
               <SkillsSection />
               <ProjectsSection />
+              <MarqueeStrip />
               <ExperienceSection />
               <ContactSection />
             </main>
