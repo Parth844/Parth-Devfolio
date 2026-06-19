@@ -36,7 +36,7 @@ const CursorGlow = () => {
       style={{
         width: 400,
         height: 400,
-        background: "radial-gradient(circle, hsla(199, 89%, 48%, 0.06) 0%, transparent 70%)",
+        background: "radial-gradient(circle, hsl(18 66% 59% / 0.07) 0%, transparent 70%)",
         // GPU-friendly trailing ease (transform-only transition stays on the compositor).
         transition: "transform 0.12s ease-out",
       }}

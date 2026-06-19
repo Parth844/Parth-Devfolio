@@ -81,7 +81,7 @@ const ExperienceSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="glass rounded-xl p-6 md:p-10 border border-border hover:border-primary/30 transition-all duration-500 hover:neon-glow"
+                className="border border-border bg-card/40 backdrop-blur-sm p-6 md:p-10 hover:border-primary/40 transition-all duration-500 relative overflow-hidden group/card"
               >
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-border pb-6">
@@ -191,7 +191,7 @@ const ExperienceSection = () => {
                     animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
                     transition={{ duration: 0.6, delay: 0.1 * i, ease: "easeOut" }}
                     whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.3 } }}
-                    className={`glass rounded-xl p-6 md:p-8 group border border-border hover:border-primary/30 transition-all duration-500 hover:neon-glow ${item.colSpan}`}
+                    className={`border border-border bg-card/40 backdrop-blur-sm p-6 md:p-8 group hover:border-primary/40 transition-all duration-500 relative overflow-hidden ${item.colSpan}`}
                   >
                     <div className="flex gap-4 items-center mb-4">
                       <motion.div

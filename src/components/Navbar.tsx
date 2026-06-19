@@ -66,7 +66,7 @@ const Navbar = () => {
       <div
         className={`w-full max-w-5xl flex items-center justify-between pointer-events-auto transition-all duration-500 ${
           scrolled
-            ? "glass-strong rounded-full px-6 py-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-border/60 backdrop-blur-lg"
+            ? "glass-strong rounded-full px-6 py-2.5 shadow-[0_10px_40px_rgba(0,0,0,0.6),0_0_0_1px_hsl(20_10%_14%)] border border-border/60 backdrop-blur-xl"
             : "px-6 py-2 bg-transparent"
         }`}
       >
@@ -118,7 +118,7 @@ const Navbar = () => {
         {/* Quick Contact Button */}
         <button
           onClick={() => scrollTo("Contact")}
-          className="hidden md:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_15px_hsl(var(--primary)/0.3)] transition-all duration-300 text-xs font-semibold uppercase tracking-wider"
+          className="magnetic-btn hidden md:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary text-primary-foreground hover:bg-accent hover:shadow-[0_0_20px_hsl(18_66%_59%/0.4)] transition-all duration-300 text-xs font-bold uppercase tracking-wider"
         >
           <Send size={12} /> Let's Talk
         </button>
