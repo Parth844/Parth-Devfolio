@@ -11,7 +11,7 @@ const StarStreaks = () => {
     const [lines, colors] = useMemo(() => {
         const positions = new Float32Array(count * 6);
         const colors = new Float32Array(count * 6);
-        const colorPalette = ["#DA7756", "#ffffff", "#E8A87C", "#f5d0b5", "#ffffff"];
+        const colorPalette = ["#00f3ff", "#ffffff", "#0078ff", "#a5f3fc", "#ffffff"];
 
         for (let i = 0; i < count; i++) {
             const radius = 3 + Math.random() * 25;
@@ -134,7 +134,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                     className="mb-10"
                 >
                     <p className="font-display font-black text-4xl md:text-5xl tracking-tighter text-white">
-                        PARTH <span style={{ color: "#DA7756" }}>TYAGI</span>
+                        PARTH <span className="text-primary">TYAGI</span>
                     </p>
                     <p className="text-xs tracking-[0.4em] uppercase text-white/30 mt-2">
                         AI · Design · Technology
@@ -158,8 +158,8 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                 {/* Loading Bar */}
                 <div className="w-48 h-[1px] bg-white/10 relative overflow-hidden mx-auto">
                     <motion.div
-                        className="absolute inset-0"
-                        style={{ background: "linear-gradient(90deg, #DA7756, #E8A87C)" }}
+                        className="absolute inset-0 bg-primary"
+                        style={{}}
                         initial={{ left: "-100%" }}
                         animate={{ left: "0%" }}
                         transition={{ duration: 7.5, ease: "easeIn" }}
