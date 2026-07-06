@@ -48,13 +48,13 @@ const StarStreaks = () => {
         const elapsed = state.clock.elapsedTime;
         // Reversed Surge: moving away from camera (negative Z)
         let speed = -0.6;
-        if (elapsed > 4.5) {
-            const t = Math.min((elapsed - 4.5) / 3, 1);
+        if (elapsed > 2.0) {
+            const t = Math.min((elapsed - 2.0) / 1.3, 1);
             speed = THREE.MathUtils.lerp(-0.6, -50, t * t);
         }
 
-        // Final surge boost at 97% completion (7.275s)
-        if (elapsed > 7.275) {
+        // Final surge boost near completion (~97%)
+        if (elapsed > 3.4) {
             speed *= 1.5;
         }
 
@@ -99,10 +99,10 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
 
     useEffect(() => {
         const timers = [
-            setTimeout(() => setLoadingText("Synchronizing Neural Core..."), 2000),
-            setTimeout(() => setLoadingText("Loading Assets..."), 4000),
-            setTimeout(() => setLoadingText("Finalizing..."), 6000),
-            setTimeout(() => onFinished(), 7500)
+            setTimeout(() => setLoadingText("Synchronizing Neural Core..."), 900),
+            setTimeout(() => setLoadingText("Loading Assets..."), 1800),
+            setTimeout(() => setLoadingText("Finalizing..."), 2700),
+            setTimeout(() => onFinished(), 3500)
         ];
 
         return () => timers.forEach(t => clearTimeout(t));
@@ -136,7 +136,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                     <p className="font-display font-black text-4xl md:text-5xl tracking-tighter text-white">
                         PARTH <span className="text-primary">TYAGI</span>
                     </p>
-                    <p className="text-xs tracking-[0.4em] uppercase text-white/30 mt-2">
+                    <p className="text-xs tracking-[0.4em] uppercase text-white mt-2">
                         AI · Design · Technology
                     </p>
                 </motion.div>
@@ -150,7 +150,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                     className="mb-6"
                 >
                     <p className="font-display text-sm font-semibold tracking-[0.3em] uppercase"
-                       style={{ color: "#DA7756" }}>
+                       style={{ color: "#22c55e" }}>
                         {loadingText}
                     </p>
                 </motion.div>
@@ -162,7 +162,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
                         style={{}}
                         initial={{ left: "-100%" }}
                         animate={{ left: "0%" }}
-                        transition={{ duration: 7.5, ease: "easeIn" }}
+                        transition={{ duration: 3.5, ease: "easeIn" }}
                     />
                     {/* Shimmer */}
                     <motion.div
