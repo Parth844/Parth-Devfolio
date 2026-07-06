@@ -26,22 +26,19 @@ export default defineConfig(({ mode }) => ({
         // than three.js does), which is the real first-load win.
         manualChunks(id) {
           if (!id.includes("node_modules")) return;
-          if (id.includes("@react-three") || id.includes("/three/")) return "three-vendor";
+          // Only libraries with no cross-chunk imports get their own chunk.
+          // Splitting @react-three/* or react-router into separate chunks
+          // creates circular chunks (they import React / @remix-run/router
+          // living elsewhere), which breaks module init order in production
+          // and renders a blank page.
+          if (id.includes("/node_modules/three/")) return "three-vendor";
+          if (id.includes("gsap") || id.includes("lenis")) return "animation-vendor";
           if (
-            id.includes("framer-motion") ||
-            id.includes("gsap") ||
-            id.includes("lenis")
-          )
-            return "animation-vendor";
-          if (id.includes("@radix-ui")) return "radix-vendor";
-          if (
-            id.includes("react-router") ||
             id.includes("react-dom") ||
-            id.includes("/react/") ||
+            id.includes("/node_modules/react/") ||
             id.includes("/scheduler/")
           )
             return "react-vendor";
-          return "vendor";
         },
       },
     },
