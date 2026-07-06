@@ -205,8 +205,8 @@ function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0
         </Center>
 
         <group position={[0, 0.04, -0.33]}>
-          <Sparkles count={200} scale={[0.1, 0.1, 0.4]} size={1.5} speed={4} color="#22c55e" opacity={1} />
-          <pointLight intensity={30} distance={1} color="#22c55e" />
+          <Sparkles count={200} scale={[0.1, 0.1, 0.4]} size={1.5} speed={4} color="#ff3300" opacity={1} />
+          <pointLight intensity={30} distance={1} color="#ff3300" />
         </group>
 
         {lasers.map(laser => (
