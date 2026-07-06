@@ -439,7 +439,7 @@ const HeroSection = () => {
         </motion.div>
         <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 text-white drop-shadow-[0_0_60px_hsl(18_66%_59%/0.2)] leading-[0.9]">
           Turning Ideas into<br />
-          <span className="text-primary italic" style={{ textShadow: "0 0 40px hsl(18 66% 59% / 0.4)" }}>Intelligent</span> Products
+          <span className="text-primary italic" style={{ textShadow: "0 0 40px hsl(151 55% 52% / 0.4)" }}>Intelligent</span> Products
         </h1>
         <p className="text-base md:text-lg text-muted-foreground font-light tracking-[0.25em] uppercase max-w-xl px-4">
           AI · Design · Technology
