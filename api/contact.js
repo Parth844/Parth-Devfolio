@@ -1,3 +1,5 @@
+import { getVisitorInfo } from './_visitor.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -8,6 +10,8 @@ export default async function handler(req, res) {
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+
+  const info = getVisitorInfo(req);
 
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
   if (webhookUrl) {
@@ -20,7 +24,10 @@ export default async function handler(req, res) {
             fields: [
               { name: 'Name', value: name, inline: true },
               { name: 'Email', value: email, inline: true },
-              { name: 'Message', value: message }
+              { name: 'Message', value: message },
+              { name: 'Location', value: info.location || 'Unknown', inline: true },
+              { name: 'IP', value: info.ip || 'Unknown', inline: true },
+              { name: 'Browser / OS', value: `${info.browser} / ${info.os}`, inline: true }
             ],
             timestamp: new Date().toISOString()
           }
