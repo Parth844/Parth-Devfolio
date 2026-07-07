@@ -6,7 +6,7 @@ This repository contains the source code for my interactive, 3D-enhanced portfol
 
 ## 🎥 Project Demo
 
-[▶️ Watch the demo video](./devfolio.webm)
+[devfolio.webm](https://github.com/user-attachments/assets/3102271b-0526-4178-bbbb-de2f730ad413)
 
 ## 🚀 Features
 
