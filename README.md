@@ -4,6 +4,10 @@ Welcome to the personal portfolio of **Parth Tyagi** — UI/UX Designer, AI Expl
 
 This repository contains the source code for my interactive, 3D-enhanced portfolio website.
 
+## 🎥 Project Demo
+
+[▶️ Watch the demo video](./devfolio.webm)
+
 ## 🚀 Features
 
 - **Immersive 3D Experience**: Integrated with Three.js and React Three Fiber to display an interactive 3D spaceship model and hyperloop animations.
