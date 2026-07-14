@@ -13,6 +13,33 @@ const achievements = [
   { icon: Users, title: "Hackathon Organizer (3x)", desc: "Organized multiple National and College-Level hackathons. Mentored junior developers in AR/VR and Git workflow optimization.", colSpan: "md:col-span-1" },
 ];
 
+const AchievementCard = ({ item, index }: { item: (typeof achievements)[number]; index: number }) => {
+  const cardRef = useRef(null);
+  const inView = useInView(cardRef, { once: true, margin: "-50px" });
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.6, delay: 0.1 * index, ease: "easeOut" }}
+      whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.3 } }}
+      className={`border border-border bg-card/40 backdrop-blur-sm p-6 md:p-8 group hover:border-primary/40 transition-all duration-500 relative overflow-hidden ${item.colSpan}`}
+    >
+      <div className="flex gap-4 items-center mb-4">
+        <motion.div
+          className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300"
+          whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }}
+        >
+          <item.icon className="text-primary" size={20} />
+        </motion.div>
+        <h4 className="font-display font-semibold text-lg md:text-xl text-foreground">{item.title}</h4>
+      </div>
+      <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{item.desc}</p>
+    </motion.div>
+  );
+};
+
 const ExperienceSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
@@ -179,33 +206,9 @@ const ExperienceSection = () => {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {achievements.map((item, i) => {
-                const cardRef = useRef(null);
-                const inView = useInView(cardRef, { once: true, margin: "-50px" });
-
-                return (
-                  <motion.div
-                    key={item.title}
-                    ref={cardRef}
-                    initial={{ opacity: 0, y: 30, scale: 0.98 }}
-                    animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                    transition={{ duration: 0.6, delay: 0.1 * i, ease: "easeOut" }}
-                    whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.3 } }}
-                    className={`border border-border bg-card/40 backdrop-blur-sm p-6 md:p-8 group hover:border-primary/40 transition-all duration-500 relative overflow-hidden ${item.colSpan}`}
-                  >
-                    <div className="flex gap-4 items-center mb-4">
-                      <motion.div
-                        className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300"
-                        whileHover={{ rotate: [0, -10, 10, 0], transition: { duration: 0.5 } }}
-                      >
-                        <item.icon className="text-primary" size={20} />
-                      </motion.div>
-                      <h4 className="font-display font-semibold text-lg md:text-xl text-foreground">{item.title}</h4>
-                    </div>
-                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{item.desc}</p>
-                  </motion.div>
-                );
-              })}
+              {achievements.map((item, i) => (
+                <AchievementCard key={item.title} item={item} index={i} />
+              ))}
             </div>
           </div>
 

@@ -129,7 +129,7 @@ const CustomCursor = () => {
 
     // Determine final TIE Fighter rotation
     // If in combat mode, rotate to face the target. Otherwise, use the velocity banking.
-    let finalRotation: any = cursorTilt;
+    let finalRotation: number | typeof cursorTilt = cursorTilt;
     if (combatMode && targetRef.current) {
         // Find angle between cursor and target, convert to degrees
         const dx = targetRef.current.x - cursorX.get();

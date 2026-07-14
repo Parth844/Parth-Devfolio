@@ -128,7 +128,7 @@ const Hotspot = ({ label, onClick, position }: { label: string, onClick: () => v
   </Html>
 );
 
-function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0, 0], currentView = 'front', onViewChange, ...props }: { isFixed: boolean, scrollScale?: number, targetBaseRotation?: [number, number, number], currentView?: string, onViewChange?: (view: any) => void } & any) {
+function StarfighterModel({ isFixed, scrollScale = 1, targetBaseRotation = [0, 0, 0], currentView = 'front', onViewChange, ...props }: { isFixed: boolean, scrollScale?: number, targetBaseRotation?: [number, number, number], currentView?: string, onViewChange?: (view: string) => void } & Record<string, unknown>) {
   const { scene } = useGLTF("/star_wars_ship.glb");
   const [scale, setScale] = useState<[number, number, number]>([4, 4, 4]);
   const groupRef = useRef<THREE.Group>(null);
