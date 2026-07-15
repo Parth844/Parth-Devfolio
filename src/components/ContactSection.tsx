@@ -80,8 +80,8 @@ const ContactSection = () => {
       body: JSON.stringify({ name, email, message }),
     })
       .then(async (res) => {
-        if (!res.ok) throw new Error("Server error");
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Server error");
         
         try {
           const stored = localStorage.getItem("portfolio_contact_messages");
@@ -102,25 +102,9 @@ const ContactSection = () => {
           toast.error("Saved but failed to cache database.");
         }
       })
-      .catch((err) => {
-        // Fallback: save to local storage if offline/localhost
-        try {
-          const stored = localStorage.getItem("portfolio_contact_messages");
-          const currentMessages = stored ? JSON.parse(stored) : [];
-          const updated = [newMessage, ...currentMessages];
-          localStorage.setItem("portfolio_contact_messages", JSON.stringify(updated));
-          setMessages(updated);
-          
-          setSending(false);
-          toast.success("Message saved locally (offline mode)!");
-          
-          setName("");
-          setEmail("");
-          setMessage("");
-        } catch (storageErr) {
-          setSending(false);
-          toast.error("Failed to submit form. Please check your network.");
-        }
+      .catch((err: Error) => {
+        setSending(false);
+        toast.error(err.message || "Failed to send message. Please try again.");
       });
   };
 

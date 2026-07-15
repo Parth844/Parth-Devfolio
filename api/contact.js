@@ -14,7 +14,12 @@ export default async function handler(req, res) {
   const info = getVisitorInfo(req);
 
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-  if (webhookUrl) {
+  if (!webhookUrl) {
+    console.error('DISCORD_WEBHOOK_URL is not set');
+    return res.status(500).json({ error: 'Contact service is not configured.' });
+  }
+
+  {
     try {
       const payload = {
         embeds: [
@@ -50,10 +55,4 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to send message via Webhook.' });
     }
   }
-
-  // Fallback: local testing or when Webhook env var isn't set yet
-  return res.status(200).json({ 
-    success: true, 
-    message: 'Message received! (Note: DISCORD_WEBHOOK_URL env variable not configured)' 
-  });
 }
